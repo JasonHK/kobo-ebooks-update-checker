@@ -9,6 +9,7 @@ import { renderSecondaryControlsWidget, type SecondaryControlsWidgetProps } from
 import { renderLibraryActionsWidgets, type LibraryActionsWidgetOptions } from "./ui/library-actions";
 import { Book } from "./core/books";
 import { renderItemStatusWidget } from "./ui/item-status";
+import { UnlistedError } from "./core/errors";
 
 const locale = detectLocale(htmlLangAttributeDetector);
 loadLocale(locale);
@@ -57,14 +58,24 @@ function checkUpdate(book: Book, interactive: boolean = true)
     {
         renderItemStatusWidget(book, "checking");
 
-        const product = await book.getLatestProduct();
-        if (product.productId === book.productId)
+        try
         {
-            renderItemStatusWidget(book, "latest");
+            const product = await book.getLatestProduct();
+            if (product.productId === book.productId)
+            {
+                renderItemStatusWidget(book, "latest");
+            }
+            else
+            {
+                renderItemStatusWidget(book, "outdated");
+            }
         }
-        else
+        catch (error: unknown)
         {
-            renderItemStatusWidget(book, "outdated");
+            if (error instanceof UnlistedError)
+            {
+                renderItemStatusWidget(book, "failed");
+            }
         }
     });
 }
