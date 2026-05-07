@@ -4,13 +4,6 @@ import monkey, { cdn } from "vite-plugin-monkey";
 
 export default defineConfig(
     {
-        resolve: {
-            alias: {
-                "react": "preact/compat",
-                "react-dom": "preact/compat",
-                "react/jsx-runtime": "preact/jsx-runtime",
-            },
-        },
         plugins: [
             preact(),
             monkey(
@@ -43,7 +36,8 @@ export default defineConfig(
                     build: {
                         metaFileName: true,
                         externalGlobals: {
-                            "preact": cdn.unpkg("preact", "dist/preact.min.js"),
+                            "preact": cdn.unpkg("preact", "dist/preact.min.umd.js"),
+                            "typesafe-i18n": cdn.unpkg("typesafeI18n", "dist/i18n.all.min.js"),
                         },
                     },
                 }),
