@@ -1,7 +1,5 @@
 import { render } from "preact";
-import { htmlLangAttributeDetector } from "typesafe-i18n/detectors";
-import TypesafeI18n, { useI18nContext } from "../locales/i18n-preact";
-import { detectLocale } from "../locales/i18n-util";
+import { LL } from "../locales";
 import { Book } from "../core/books";
 
 export type LibraryActionsAction = "check-single";
@@ -12,8 +10,6 @@ const widgetsCache = new WeakMap<Element, HTMLDivElement>();
 
 export function renderLibraryActionsWidgets(props: LibraryActionsWidgetOptions): void
 {
-    const locale = detectLocale(htmlLangAttributeDetector);
-
     const elements = document.querySelectorAll(".item-wrapper.book");
     for (const element of elements)
     {
@@ -32,7 +28,7 @@ export function renderLibraryActionsWidgets(props: LibraryActionsWidgetOptions):
                 container.append(widget);
             }
 
-            render(<TypesafeI18n locale={locale}><LibraryActionsWidget book={book} {...props} /></TypesafeI18n>, widget);
+            render(<LibraryActionsWidget book={book} {...props} />, widget);
         }
     }
 }
@@ -50,8 +46,6 @@ interface LibraryActionsWidgetProps
 
 const LibraryActionsWidget = ({ book, onActionClick }: LibraryActionsWidgetProps) =>
 {
-    const { LL } = useI18nContext();
-
     return (
         <li class="library-actions-list-item">
             <button class="library-action" onClick={() => onActionClick("check-single", book)}>{LL.libraryActions.checkSingle()}</button>

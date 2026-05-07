@@ -1,7 +1,5 @@
 import { render } from "preact";
-import { htmlLangAttributeDetector } from "typesafe-i18n/detectors";
-import TypesafeI18n, { useI18nContext } from "../locales/i18n-preact";
-import { detectLocale } from "../locales/i18n-util";
+import { LL } from "../locales";
 
 import classes from "./secondary-controls.module.scss";
 
@@ -16,8 +14,6 @@ const widgetsCache = new WeakMap<Element, HTMLDivElement>();
 
 export function renderSecondaryControlsWidget(props: SecondaryControlsWidgetProps): void
 {
-    const locale = detectLocale(htmlLangAttributeDetector);
-
     const container = document.querySelector(".secondary-controls");
     if (!container) { throw new Error("Unable to find the container for secondary controls"); };
 
@@ -32,13 +28,11 @@ export function renderSecondaryControlsWidget(props: SecondaryControlsWidgetProp
         container.insertBefore(widget, container.querySelector(".sort-by-container"));
     }
 
-    render(<TypesafeI18n locale={locale}><SecondaryControlsWidget {...props} /></TypesafeI18n>, widget);
+    render(<SecondaryControlsWidget {...props} />, widget);
 }
 
 const SecondaryControlsWidget = ({ onActionClick }: SecondaryControlsWidgetProps) =>
 {
-    const { LL } = useI18nContext();
-
     return (
         <div class={classes.controls}>
             <button class={classes.button} onClick={() => onActionClick("check-page")}>{LL.secondaryControls.checkPage()}</button>

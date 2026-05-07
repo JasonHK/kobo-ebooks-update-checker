@@ -1,8 +1,6 @@
 import { render } from "preact";
 import { clsx } from "clsx";
-import { htmlLangAttributeDetector } from "typesafe-i18n/detectors";
-import TypesafeI18n, { useI18nContext } from "../locales/i18n-preact";
-import { detectLocale } from "../locales/i18n-util";
+import { LL } from "../locales";
 import type { Book } from "../core/books";
 import type { CheckStatus } from "../core/status";
 
@@ -12,8 +10,6 @@ const widgetsCache = new WeakMap<Element, Element>();
 
 export function renderItemStatusWidget(book: Book, status: CheckStatus, message?: string): void
 {
-    const locale = detectLocale(htmlLangAttributeDetector);
-
     const element = book.findElement();
     if (!element) { throw new Error("Unable to find the element for the book"); }
 
@@ -27,7 +23,7 @@ export function renderItemStatusWidget(book: Book, status: CheckStatus, message?
         widgetsCache.set(element, widget);
     }
 
-    render(<TypesafeI18n locale={locale}><ItemStatusWidget status={status} /></TypesafeI18n>, widget);
+    render(<ItemStatusWidget status={status} />, widget);
 }
 
 interface ItemStatusWidgetProps
@@ -37,8 +33,6 @@ interface ItemStatusWidgetProps
 
 const ItemStatusWidget = ({ status }: ItemStatusWidgetProps) =>
 {
-    const { LL } = useI18nContext();
-
     return (
         <span class={clsx({ [classes.outdated]: (status === "outdated"), [classes.skipped]: (status === "skipped"), [classes.failed]: (status === "failed") })}>
             {LL.status[status]()}

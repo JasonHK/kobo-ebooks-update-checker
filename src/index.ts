@@ -1,7 +1,3 @@
-import { htmlLangAttributeDetector } from "typesafe-i18n/detectors";
-import { detectLocale } from "./locales/i18n-util";
-import { loadLocale } from "./locales/i18n-util.sync";
-
 import Queue from "queue";
 
 // import { getBooksMapFromPage } from "./core/loader";
@@ -10,9 +6,6 @@ import { renderLibraryActionsWidgets, type LibraryActionsWidgetOptions } from ".
 import { Book } from "./core/books";
 import { renderItemStatusWidget } from "./ui/item-status";
 import { UnlistedError } from "./core/errors";
-
-const locale = detectLocale(htmlLangAttributeDetector);
-loadLocale(locale);
 
 const queue = new Queue({ autostart: true, concurrency: 5 });
 
