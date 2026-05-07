@@ -78,7 +78,7 @@ export class Book
 
 function isAudiobook(element: Element): boolean
 {
-    return (element.querySelector(".image-container .product-type-icon") !== null);
+    return ((element.querySelector(".image-container .product-type-icon")?.childElementCount ?? 0) > 0);
 }
 
 function getStoreUrl(element: Element, { imageUrl }: BookGizmoConfig): string
