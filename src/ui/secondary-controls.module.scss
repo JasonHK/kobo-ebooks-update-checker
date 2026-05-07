@@ -1,0 +1,109 @@
+.container
+{
+    flex-wrap: wrap;
+
+    @media (max-width: 568px)
+    {
+        margin-right: 18px;
+    }
+}
+
+.widget
+{
+    display: flex;
+    align-items: center;
+    text-align: right;
+
+    @media (max-width: 568px)
+    {
+        margin-bottom: 1.5rem;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+    }
+}
+
+.controls
+{
+    margin-right: 1rem;
+    width: auto;
+    min-width: 13rem;
+
+    @media (max-width: 568px)
+    {
+        margin-right: 0;
+        width: 100%;
+        white-space: break-spaces;
+    }
+}
+
+.button
+{
+    border-radius: 20px;
+    min-width: 0;
+    max-width: 100%;
+    width: auto;
+    overflow: hidden;
+    background-color: #eee;
+    color: #000;
+    font-size: 1.6rem;
+    font-family: "Rakuten Sans UI", "Trebuchet MS", Trebuchet, Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    white-space: nowrap;
+    transition: background-color .3s ease-in-out, color .15s ease-in-out 0s;
+
+    &::before
+    {
+        position: absolute;
+        top: calc(50% - 30px);
+        border-radius: 80px;
+        width: calc(100% - 30px);
+        height: 60px;
+        background-color: rgba(0, 0, 0, .1);
+        content: "";
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    &:disabled
+    {
+        background-color: "#dcdcdc";
+        color: rgba(0,0,0,.42);
+        pointer-events: none;
+    }
+
+    &:hover
+    {
+        background-color: rgba(0, 0, 0, .04);
+    }
+
+    &:focus::before
+    {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    &:active
+    {
+        background-color: #000;
+        color: #fff;
+    }
+
+    @media (max-width: 568px)
+    {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100%;
+        text-align: center;
+
+        &:not(:first-child)
+        {
+            margin-top: 8px;
+        }
+    }
+}
