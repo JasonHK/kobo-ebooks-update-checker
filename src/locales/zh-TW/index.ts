@@ -4,10 +4,11 @@ const zh_TW: Translation = {
     secondaryControls: {
         checkPage: "為本頁檢查更新",
         checkPageInProgress: "正在檢查更新……",
+        checkLibrary: "為書庫檢查更新",
         copyOutdated: "複製過時書籍",
     },
     libraryActions: {
-        checkSingle: "檢查更新",
+        checkUpdate: "檢查更新",
     },
     status: {
         pending: "等待中……",
