@@ -1,6 +1,6 @@
 import { render } from "preact";
 import { LL } from "../locales";
-import { Book } from "../core/books";
+import { getBookFromElement, type Book } from "../core/books";
 
 export type LibraryActionsAction = "check-single";
 
@@ -13,7 +13,7 @@ export function renderLibraryActionsWidgets(props: LibraryActionsWidgetOptions):
     const elements = document.querySelectorAll(".item-wrapper.book");
     for (const element of elements)
     {
-        const book = Book.fromElement(element);
+        const book = getBookFromElement(element);
         const containers = element.querySelectorAll(".library-actions-list");
         if (containers.length === 0) { throw new Error("Unable to find the containers for library actions"); };
 

@@ -1,7 +1,7 @@
 import { render } from "preact";
 import { clsx } from "clsx";
 import { LL } from "../locales";
-import type { Book } from "../core/books";
+import { getElementByBook, type Book } from "../core/books";
 import type { CheckStatus } from "../core/status";
 
 import classes from "./item-status.module.scss";
@@ -10,7 +10,7 @@ const widgetsCache = new WeakMap<Element, Element>();
 
 export function renderItemStatusWidget(book: Book, status: CheckStatus, message?: string): void
 {
-    const element = book.findElement();
+    const element = getElementByBook(book);
     if (!element) { throw new Error("Unable to find the element for the book"); }
 
     let widget: Element | null | undefined = widgetsCache.get(element);

@@ -1,4 +1,4 @@
-import { Book } from "./books";
+import { getBookFromElement } from "./books";
 
 export function getBooksFromPage(document: Document)
 {
@@ -7,5 +7,5 @@ export function getBooksFromPage(document: Document)
 
 export function getBooksMapFromPage(document: Document)
 {
-    return new Map(Array.from(document.querySelectorAll(".item-wrapper.book")).map((element) => [Book.fromElement(element), element]));
+    return new Map(Array.from(document.querySelectorAll(".item-wrapper.book")).map((element) => [getBookFromElement(element), element]));
 }
