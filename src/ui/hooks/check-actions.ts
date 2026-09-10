@@ -68,6 +68,10 @@ export function useCheckActions(): CheckActions
                     });
             }
         }
+        finally
+        {
+            updateProgress(done + 1, total);
+        }
     }
 
     async function runBatchCheck(books: Book[], scope: Exclude<CheckScope, "single">)
@@ -89,7 +93,13 @@ export function useCheckActions(): CheckActions
 
     async function checkSingleBook(book: Book): Promise<void>
     {
-        if (isChecking && (scope !== "single")) { return; }
+        if (isChecking/*  && (scope !== "single") */) { return; }
+        beginCheck("single", 0);
+
+        setupItemStatus(book);
+        await checkUpdate(book, "single");
+
+        endCheck();
     }
 
     async function checkWholePage(): Promise<void>
@@ -102,7 +112,7 @@ export function useCheckActions(): CheckActions
 
     async function checkWholeLibrary(): Promise<void>
     {
-
+        if (isChecking) { return; }
     }
 
     return {

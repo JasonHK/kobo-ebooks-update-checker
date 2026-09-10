@@ -20,7 +20,7 @@ function LibraryActions({ book }: LibraryActionsProps): ComponentChildren
 
     return (
         <li class="library-actions-list-item">
-            <button class={clsx("library-action", classes.action)} disabled={isChecking && (scope !== "single")} onClick={() => checkSingleBook(book)}>{LL.libraryActions.checkUpdate()}</button>
+            <button class={clsx("library-action", classes.action)} disabled={isChecking/*  && (scope !== "single") */} onClick={() => checkSingleBook(book)}>{LL.libraryActions.checkUpdate()}</button>
         </li>
     );
 };
