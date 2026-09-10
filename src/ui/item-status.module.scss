@@ -1,0 +1,20 @@
+:global(.item-status):has(.outdated)
+{
+    background: oklch(74.984% 0.14871 21.212);
+}
+
+:global(.item-status):has(.skipped)
+{
+    background: oklch(77.311% 0.00009 271.152);
+}
+
+:global(.item-status):has(.failed)
+{
+    background: oklch(79.622% 0.17071 71.703);
+}
+
+:global(.item-status):has(:is(.skipped, .failed)) a
+{
+    text-decoration-line: underline;
+    cursor: help;
+}
