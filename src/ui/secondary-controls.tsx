@@ -1,41 +1,41 @@
-import { render } from "preact";
+import { render, type ComponentChildren } from "preact";
+
 import { LL } from "../locales";
 
+import { useCheckActions } from "./hooks/check-actions";
 import classes from "./secondary-controls.module.scss";
 
-export type SecondaryControlsAction = "check-page" | "copy";
-
-export interface SecondaryControlsWidgetProps
+function SecondaryControls(): ComponentChildren
 {
-    onActionClick: (action: SecondaryControlsAction) => void;
-}
+    const { checkStates, checkWholePage, checkWholeLibrary } = useCheckActions();
+    const { isChecking, scope } = checkStates;
 
-const widgetsCache = new WeakMap<Element, HTMLDivElement>();
-
-export function renderSecondaryControlsWidget(props: SecondaryControlsWidgetProps): void
-{
-    const container = document.querySelector(".secondary-controls");
-    if (!container) { throw new Error("Unable to find the container for secondary controls"); };
-
-    let widget = widgetsCache.get(container);
-    if (!widget)
-    {
-        widget = document.createElement("div");
-        widget.classList.add(classes.widget);
-        widgetsCache.set(container, widget);
-
-        container.classList.add(classes.container);
-        container.insertBefore(widget, container.querySelector(".sort-by-container"));
-    }
-
-    render(<SecondaryControlsWidget {...props} />, widget);
-}
-
-const SecondaryControlsWidget = ({ onActionClick }: SecondaryControlsWidgetProps) =>
-{
     return (
         <div class={classes.controls}>
-            <button class={classes.button} onClick={() => onActionClick("check-page")}>{LL.secondaryControls.checkPage()}</button>
+            <ul class={classes.list}>
+                <li class={classes.listItem}>
+                    <button class={classes.button} disabled={isChecking} onClick={() => checkWholePage()}>
+                        {(isChecking && (scope === "page")) ? LL.secondaryControls.checkPageInProgress() : LL.secondaryControls.checkPage()}
+                    </button>
+                </li>
+                <li class={classes.listItem}>
+                    <button class={classes.button} disabled={isChecking} onClick={() => checkWholeLibrary()}>
+                        {LL.secondaryControls.checkLibrary()}
+                    </button>
+                </li>
+            </ul>
         </div>
     );
 };
+
+export function setupSecondaryControls(): void
+{
+    const grid = document.querySelector(".secondary-controls");
+    if (!grid) { throw new Error("Unable to find the container for secondary controls"); };
+
+    const container = document.createElement("div");
+    container.classList.add(classes.container);
+    grid.insertBefore(container, grid.querySelector(".sort-by-container"));
+
+    render(<SecondaryControls />, container);
+}

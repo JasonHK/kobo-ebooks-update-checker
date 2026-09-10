@@ -1,41 +1,47 @@
-import { render } from "preact";
+import { render, type ComponentChildren } from "preact";
 import { clsx } from "clsx";
-import { LL } from "../locales";
-import { getElementByBook, type Book } from "../core/books";
-import type { CheckStatus } from "../core/status";
 
+import { getElementByBook, type Book } from "../core/books";
+import { LL } from "../locales";
+
+import { useGlobals } from "./hooks/globals";
 import classes from "./item-status.module.scss";
 
-const widgetsCache = new WeakMap<Element, Element>();
+interface ItemStatusProps
+{
+    book: Book;
+}
 
-export function renderItemStatusWidget(book: Book, status: CheckStatus, message?: string): void
+function ItemStatus(props: ItemStatusProps): ComponentChildren
+{
+    const { book } = props;
+
+    const { getBookStatusById } = useGlobals();
+    const { type, message, error } = getBookStatusById(book.id);
+    if (type !== "failed")
+    {
+        return (
+            <span class={clsx(classes[type])}>
+                {LL.status[type]()}
+            </span>
+        );
+    }
+
+    return (
+        <a class={clsx(classes[type])} onClick={() => {}}>
+            {LL.status[type]()}
+        </a>
+    );
+};
+
+export function setupItemStatus(book: Book): void
 {
     const element = getElementByBook(book);
     if (!element) { throw new Error("Unable to find the element for the book"); }
 
-    let widget: Element | null | undefined = widgetsCache.get(element);
-    if (!widget)
-    {
-        widget = element.querySelector(".item-status");
-        if (!widget) { throw new Error("Unable to find the element for item status"); }
+    const container = element.querySelector(".item-status");
+    if (!container) { throw new Error("Unable to find the element for item status"); }
 
-        widget.replaceChildren();
-        widgetsCache.set(element, widget);
-    }
-
-    render(<ItemStatusWidget status={status} />, widget);
+    container.replaceChildren();
+    render(<ItemStatus book={book} />, container);
 }
-
-interface ItemStatusWidgetProps
-{
-    status: CheckStatus;
-}
-
-const ItemStatusWidget = ({ status }: ItemStatusWidgetProps) =>
-{
-    return (
-        <span class={clsx({ [classes.outdated]: (status === "outdated"), [classes.skipped]: (status === "skipped"), [classes.failed]: (status === "failed") })}>
-            {LL.status[status]()}
-        </span>
-    );
-};

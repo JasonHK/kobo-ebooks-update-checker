@@ -1,6 +1,4 @@
-import type { Book } from "./books";
-
-export type CheckStatus =
+export type StatusType =
     | "pending"
     | "checking"
     | "latest"
@@ -9,18 +7,9 @@ export type CheckStatus =
     | "skipped"
     | "failed";
 
-export class BookStatus
+export interface BookStatus
 {
-    readonly book: Book;
-
-    status: CheckStatus = "pending";
-
-    message: string | null = null;
-
-    constructor(book: Book)
-    {
-        this.book = book;
-    }
+    type: StatusType;
+    message?: string;
+    error?: unknown;
 }
-
-export const StatusRegistry = new Map<string, BookStatus>();

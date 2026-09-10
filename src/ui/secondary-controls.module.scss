@@ -1,4 +1,4 @@
-.container
+:global(.secondary-controls)
 {
     flex-wrap: wrap;
 
@@ -8,7 +8,7 @@
     }
 }
 
-.widget
+.container
 {
     display: flex;
     align-items: center;
@@ -35,6 +35,23 @@
         margin-right: 0;
         width: 100%;
         white-space: break-spaces;
+    }
+}
+
+.list
+{
+    @media (min-width: 569px)
+    {
+        display: flex;
+        gap: 0.5ch;
+    }
+}
+
+.listItem:not(:first-child)
+{
+    @media (max-width: 568px)
+    {
+        margin-top: 18px;
     }
 }
 

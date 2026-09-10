@@ -12,3 +12,9 @@
 {
     background: oklch(79.622% 0.17071 71.703);
 }
+
+:global(.item-status):has(:is(.skipped, .failed)) a
+{
+    text-decoration-line: underline;
+    cursor: help;
+}

@@ -1,54 +1,50 @@
-import { render } from "preact";
-import { LL } from "../locales";
+import { render, type ComponentChildren } from "preact";
+import clsx from "clsx";
+
+import { BOOK_ACTIONS_LIST, LIBRARY_BOOKS } from "../core/selectors";
 import { getBookFromElement, type Book } from "../core/books";
+import { LL } from "../locales";
+import { useCheckActions } from "./hooks/check-actions";
 
-export type LibraryActionsAction = "check-single";
+import classes from "./library-action.module.scss";
 
-export type LibraryActionsWidgetOptions = Omit<LibraryActionsWidgetProps, "book">;
-
-const widgetsCache = new WeakMap<Element, HTMLDivElement>();
-
-export function renderLibraryActionsWidgets(props: LibraryActionsWidgetOptions): void
-{
-    const elements = document.querySelectorAll(".item-wrapper.book");
-    for (const element of elements)
-    {
-        const book = getBookFromElement(element);
-        const containers = element.querySelectorAll(".library-actions-list");
-        if (containers.length === 0) { throw new Error("Unable to find the containers for library actions"); };
-
-        for (const container of containers)
-        {
-            let widget = widgetsCache.get(container);
-            if (!widget)
-            {
-                widget = document.createElement("div");
-                widgetsCache.set(container, widget);
-
-                container.append(widget);
-            }
-
-            render(<LibraryActionsWidget book={book} {...props} />, widget);
-        }
-    }
-}
-
-export function renderLibraryActionWidget(props: LibraryActionsWidgetOptions)
-{
-
-}
-
-interface LibraryActionsWidgetProps
+interface LibraryActionsProps
 {
     book: Book;
-    onActionClick: (action: LibraryActionsAction, target: Book) => void;
 }
 
-const LibraryActionsWidget = ({ book, onActionClick }: LibraryActionsWidgetProps) =>
+function LibraryActions({ book }: LibraryActionsProps): ComponentChildren
 {
+    const { checkStates, checkSingleBook } = useCheckActions();
+    const { isChecking, scope } = checkStates;
+
     return (
         <li class="library-actions-list-item">
-            <button class="library-action" onClick={() => onActionClick("check-single", book)}>{LL.libraryActions.checkSingle()}</button>
+            <button class={clsx("library-action", classes.action)} disabled={isChecking && (scope !== "single")} onClick={() => checkSingleBook(book)}>{LL.libraryActions.checkUpdate()}</button>
         </li>
     );
 };
+
+export function setupLibraryActions(): void
+{
+    const elements = document.querySelectorAll(LIBRARY_BOOKS);
+    for (const element of elements)
+    {
+        const book = getBookFromElement(element);
+
+        const lists = element.querySelectorAll(BOOK_ACTIONS_LIST);
+        if (lists.length === 0)
+        {
+            console.warn("Unable to find action lists for %o", element);
+            continue;
+        };
+
+        for (const list of lists)
+        {
+            const container = document.createElement("div");
+            list.append(container);
+
+            render(<LibraryActions book={book} />, container);
+        }
+    }
+}

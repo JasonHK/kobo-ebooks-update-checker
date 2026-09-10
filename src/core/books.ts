@@ -1,6 +1,7 @@
 import { ZodError } from "zod";
 import { z } from "zod/mini";
 import { ParsingError } from "./errors";
+import { LIBRARY_BOOKS } from "./selectors";
 
 type GizmoConfig = z.infer<typeof GizmoConfig>;
 const GizmoConfig = z.object(
@@ -9,7 +10,7 @@ const GizmoConfig = z.object(
     productId: z.uuid(),
     title: z.string(),
     author: z.string(),
-    imageUrl: z.url(),
+    imageUrl: z.string(),
 });
 
 export type Book = z.infer<typeof Book>
@@ -60,11 +61,11 @@ function getStoreUrl(element: Element, { imageUrl }: GizmoConfig): string
 
 export function getBooksFromDocument(document: Document = window.document): Book[]
 {
-    return Array.from(document.querySelectorAll(".item-wrapper.book")).map(getBookFromElement);
+    return Array.from(document.querySelectorAll(LIBRARY_BOOKS)).map(getBookFromElement);
 }
 
 export function getElementByBook(book: Book): Element | null
 {
     const { id } = book;
-    return document.querySelector(`.item-wrapper.book[data-track-info*="${CSS.escape(id)}"]`);
+    return document.querySelector(`${LIBRARY_BOOKS}[data-track-info*="${CSS.escape(id)}"]`);
 }

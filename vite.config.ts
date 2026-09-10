@@ -8,7 +8,7 @@ export default defineConfig(
             preact(),
             monkey(
                 {
-                    entry: "src/index.ts",
+                    entry: "src/index.tsx",
                     userscript: {
                         "name": {
                             "": "Kobo e-Books Update Checker",
