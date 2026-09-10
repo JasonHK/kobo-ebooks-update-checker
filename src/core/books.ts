@@ -1,7 +1,6 @@
 import { ZodError } from "zod";
 import { z } from "zod/mini";
-import { UnlistedError, ParsingError } from "./errors";
-import { fetchProductFromUrl, type Product } from "./products";
+import { ParsingError } from "./errors";
 
 type GizmoConfig = z.infer<typeof GizmoConfig>;
 const GizmoConfig = z.object(
@@ -19,12 +18,6 @@ export const Book = z.extend(z.omit(GizmoConfig, { imageUrl: true }),
     storeUrl: z.url(),
 });
 
-export function getElementByBook(book: Book): Element | null
-{
-    const { id } = book;
-    return document.querySelector(`.item-wrapper.book[data-track-info*="${CSS.escape(id)}"]`);
-}
-
 export function getBookFromElement(element: Element): Book
 {
     const action = element.querySelector(".library-action:is(.mark-as-finished, .remove-from-archive)");
@@ -32,9 +25,10 @@ export function getBookFromElement(element: Element): Book
 
     try
     {
-        const { id, productId, title, author, imageUrl } = GizmoConfig.parse(JSON.parse(action.dataset.koboGizmoConfig!));
-        const storeUrl = getStoreUrl(element, imageUrl);
+        const config = GizmoConfig.parse(JSON.parse(action.dataset.koboGizmoConfig!));
 
+        const { id, productId, title, author } = config;
+        const storeUrl = getStoreUrl(element, config);
         return { id, productId, title, author, storeUrl };
     }
     catch (error: unknown)
@@ -53,7 +47,7 @@ function isAudiobook(element: Element): boolean
     return ((element.querySelector(".image-container .product-type-icon")?.childElementCount ?? 0) > 0);
 }
 
-function getStoreUrl(element: Element, imageUrl: string): string
+function getStoreUrl(element: Element, { imageUrl }: GizmoConfig): string
 {
     const titleUrl = element.querySelector<HTMLAnchorElement>(".product-field.title a")?.href;
     if (titleUrl?.startsWith("https://www.kobo.com/")) { return titleUrl; }
@@ -62,4 +56,15 @@ function getStoreUrl(element: Element, imageUrl: string): string
     const bookType = isAudiobook(element) ? "audiobook" : "ebook";
     const productCode = imageUrl.substring(imageUrl.lastIndexOf("/") + 1, imageUrl.lastIndexOf("."));
     return `${prefix}/${bookType}/${productCode}`;
+}
+
+export function getBooksFromDocument(document: Document = window.document): Book[]
+{
+    return Array.from(document.querySelectorAll(".item-wrapper.book")).map(getBookFromElement);
+}
+
+export function getElementByBook(book: Book): Element | null
+{
+    const { id } = book;
+    return document.querySelector(`.item-wrapper.book[data-track-info*="${CSS.escape(id)}"]`);
 }
