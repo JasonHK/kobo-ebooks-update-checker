@@ -12,14 +12,14 @@ function SecondaryControls(): ComponentChildren
 
     return (
         <div class={classes.controls}>
-            <ul class={classes.list}>
-                <li class={classes.listItem}>
+            <ul>
+                <li>
                     <button class={classes.button} disabled={isChecking} onClick={() => checkWholePage()}>
                         {(isChecking && (scope === "page")) ? LL.secondaryControls.checkPageInProgress() : LL.secondaryControls.checkPage()}
                     </button>
                 </li>
-                <li class={classes.listItem}>
-                    <button class={classes.button} disabled={isChecking} onClick={() => checkWholeLibrary()}>
+                <li>
+                    <button disabled={isChecking} onClick={() => checkWholeLibrary()}>
                         {LL.secondaryControls.checkLibrary()}
                     </button>
                 </li>

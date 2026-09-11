@@ -52,7 +52,9 @@ function Dialog(props: DialogProps): ComponentChildren
     return (
         <dialog ref={ref} class={classes.dialog}>
             <button class={classes.close} onClick={() => closeModal(modal.id)}></button>
-            <h2 class={classes.header}>{modal.title}</h2>
+            <header>
+                <h2>{modal.title}</h2>
+            </header>
             {modal.content}
         </dialog>
     );
