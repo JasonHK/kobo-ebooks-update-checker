@@ -52,6 +52,13 @@ export function setupItemStatus(book: Book): void
     const container = element.querySelector(".item-status");
     if (!container) { throw new Error("Unable to find the element for item status"); }
 
+    // Prevent replaceChildren from being called multiple times on the same container, which would
+    // cause the status to disappear when the component is re-rendered.
+    if (!containersCache.has(container))
+    {
+        containersCache.add(container);
     container.replaceChildren();
+    }
+
     render(<ItemStatus book={book} />, container);
 }
