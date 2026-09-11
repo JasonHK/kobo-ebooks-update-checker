@@ -24,6 +24,9 @@ const en_US: BaseTranslation = {
         parsing: "Failed to parse the latest product ID, please contact the developer for further investigations.",
         unknown: "Unknown error, please contact the developer for further investigations.",
     },
+    modals: {
+        title: "Message",
+    }
 };
 
 export default en_US;

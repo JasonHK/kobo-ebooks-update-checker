@@ -24,6 +24,9 @@ const zh_TW: Translation = {
         parsing: "無法解析最新的產品編號，請聯絡開發者以進一步調查。",
         unknown: "未知錯誤，請聯絡開發者以進一步調查。",
     },
+    modals: {
+        title: "訊息",
+    },
 };
 
 export default zh_TW;

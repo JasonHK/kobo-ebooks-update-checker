@@ -1,0 +1,74 @@
+:root
+{
+    --update-checker--primary-color: #bf0000;
+    --update-checker--secondary-color: #595959;
+}
+
+.dialog
+{
+    display: flex;
+    border: none;
+    padding: 5rem 2rem 2rem;
+    flex-direction: column;
+    align-items: center;
+    color: #595959;
+    line-height: 1.8rem;
+    font-size: 1.4rem;
+    font-family: Georgia, Times, times, serif;
+
+    &::backdrop
+    {
+        background-color: rgba(0,0,0,.65);
+    }
+
+    @media (max-width: 568px)
+    {
+        width: auto;
+        max-width: 43rem;
+    }
+}
+
+.close
+{
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 3.5rem;
+    height: 3.5rem;
+    margin: 16px;
+    border: 0;
+    padding: 0 15px;
+    min-height: 35px;
+    background-image: url(https://static.kobo.com/1.0.1.4467/Images/icons/close.svg);
+    background-size: 1.5rem 1.5rem;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: background-color .2s, color .2s;
+
+    &:is(:hover, :focus, :active)
+    {
+        background-image: url(https://static.kobo.com/1.0.1.4467/Images/icons/close-active.png);
+        background-color: var(--update-checker--secondary-color);
+    }
+}
+
+.header
+{
+    margin: 0 0 2rem;
+    padding: 0;
+    color: #0d0d0d;
+    text-align: center;
+    line-height: 2.2rem;
+    font-size: 2.2rem;
+    /* font-family: "Trebuchet MS", Trebuchet, Arial, Helvetica, sans-serif; */
+    font-family: "Rakuten Sans UI", "Trebuchet MS", Trebuchet, Arial, Helvetica, sans-serif;
+    font-style: normal;
+
+    @media (max-width: 568px)
+    {
+        margin-bottom: 1.5rem;
+        line-height: 1.6rem;
+        font-size: 1.6rem;
+    }
+}

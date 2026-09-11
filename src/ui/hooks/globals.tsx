@@ -1,16 +1,24 @@
+import type { ComponentChildren } from "preact";
 import { useSyncExternalStore } from "preact/compat";
 
 import type { BookStatus } from "../../core/status";
+import { LL } from "../../locales";
 
 interface GlobalsStore
 {
+    modals: Modal[];
     checkStates: CheckStates;
     bookStatuses: BookStatuses;
 }
 
 export interface Globals
 {
-    checkStates: CheckStates;
+    readonly modals: Modal[];
+    openModal(config?: ModalInit): string;
+    closeModal(id?: string): void;
+    closeAllModals(): void;
+
+    readonly checkStates: CheckStates;
     beginCheck(scope: CheckScope, total?: number): void;
     updateProgress(done: number, total: number): void;
     endCheck(): void;
@@ -20,6 +28,7 @@ export interface Globals
 }
 
 let store: GlobalsStore = {
+    modals: [],
     checkStates: {
         isChecking: false,
         scope: null,
@@ -49,6 +58,80 @@ function emit(): void
         listener();
     }
 }
+
+// ▙▗▌     ▌   ▜ 
+// ▌▘▌▞▀▖▞▀▌▝▀▖▐ 
+// ▌ ▌▌ ▌▌ ▌▞▀▌▐ 
+// ▘ ▘▝▀ ▝▀▘▝▀▘ ▘
+
+export interface Modal
+{
+    id: string;
+    title: ComponentChildren;
+    dismissible: boolean;
+    content: ComponentChildren;
+    footer: ComponentChildren;
+    onClose?: () => void;
+}
+
+type ModalRequiredFields = "content" | "footer";
+export type ModalInit = Pick<Modal, ModalRequiredFields> & Partial<Exclude<Modal, ModalRequiredFields>>;
+
+function openModal(init: ModalInit): string
+{
+    const id = init?.id ?? crypto.randomUUID();
+    const title = init?.title ?? LL.modals.title();
+    const dismissible = init?.dismissible ?? true;
+    
+    store = {
+        ...store,
+        modals: [...store.modals, { ...init, id, title, dismissible }],
+    };
+    emit();
+
+    return id;
+}
+
+function closeModal(id?: string): void
+{
+    let closingModals: Modal[];
+    if (!id)
+    {
+        closingModals = store.modals.slice(-1);
+        store = {
+            ...store,
+            modals: store.modals.slice(0, -1),
+        };
+    }
+    else
+    {
+        closingModals = store.modals.filter((modal) => (modal.id === id));
+        store = {
+            ...store,
+            modals: store.modals.filter((modal) => (modal.id !== id)),
+        };
+    }
+
+    closingModals.forEach((modal) => modal.onClose?.());
+    emit();
+}
+
+function closeAllModals(): void
+{
+    const closingModals = store.modals;
+    store = {
+        ...store,
+        modals: [],
+    };
+
+    closingModals.forEach((modal) => modal.onClose?.());
+    emit();
+}
+
+// ▞▀▖▌        ▌  ▞▀▖▐     ▐        
+// ▌  ▛▀▖▞▀▖▞▀▖▌▗▘▚▄ ▜▀ ▝▀▖▜▀ ▞▀▖▞▀▘
+// ▌ ▖▌ ▌▛▀ ▌ ▖▛▚ ▖ ▌▐ ▖▞▀▌▐ ▖▛▀ ▝▀▖
+// ▝▀ ▘ ▘▝▀▘▝▀ ▘ ▘▝▀  ▀ ▝▀▘ ▀ ▝▀▘▀▀                     
 
 export type CheckScope = "single" | "page" | "library";
 
@@ -101,6 +184,11 @@ function endCheck(): void
     emit();
 }
 
+// ▛▀▖      ▌  ▞▀▖▐     ▐              
+// ▙▄▘▞▀▖▞▀▖▌▗▘▚▄ ▜▀ ▝▀▖▜▀ ▌ ▌▞▀▘▞▀▖▞▀▘
+// ▌ ▌▌ ▌▌ ▌▛▚ ▖ ▌▐ ▖▞▀▌▐ ▖▌ ▌▝▀▖▛▀ ▝▀▖
+// ▀▀ ▝▀ ▝▀ ▘ ▘▝▀  ▀ ▝▀▘ ▀ ▝▀▘▀▀ ▝▀▘▀▀ 
+
 export type BookStatuses = Map<string, BookStatus>;
 
 function setBookStatusById(id: string, status: BookStatus): void
@@ -124,9 +212,14 @@ function getBookStatusById(id: string): BookStatus
 
 export function useGlobals(): Globals
 {
-    const { checkStates } = useSyncExternalStore(subscribe, getSnapshot);
+    const { modals, checkStates } = useSyncExternalStore(subscribe, getSnapshot);
 
     return {
+        modals,
+        openModal,
+        closeModal,
+        closeAllModals,
+
         checkStates,
         beginCheck,
         updateProgress,
