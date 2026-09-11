@@ -16,5 +16,5 @@
 :global(.item-status):has(:is(.skipped, .failed)) a
 {
     text-decoration-line: underline;
-    cursor: help;
+    cursor: help !important;
 }
