@@ -30,6 +30,9 @@ export const Book = z.extend(z.omit(GizmoConfig, { imageUrl: true }),
 {
     /** The URL of the book's store page. */
     storeUrl: z.url(),
+
+    /** Indicates if the book is a preview. */
+    isPreview: z.boolean(),
 });
 
 /**
@@ -40,7 +43,7 @@ export const Book = z.extend(z.omit(GizmoConfig, { imageUrl: true }),
  */
 export function getBookFromElement(element: Element): Book
 {
-    const action = element.querySelector(".library-action:is(.mark-as-finished, .remove-from-archive)");
+    const action = element.querySelector(".library-action:is(.mark-as-finished, .remove-from-library, .remove-from-archive)");
     if (!(action instanceof HTMLElement)) { throw new ParsingError("Library action element not found."); }
 
     try
@@ -49,7 +52,7 @@ export function getBookFromElement(element: Element): Book
 
         const { id, productId, title, author } = config;
         const storeUrl = getStoreUrl(element, config);
-        return { id, productId, title, author, storeUrl };
+        return { id, productId, title, author, storeUrl, isPreview: isPreview(element) };
     }
     catch (error: unknown)
     {
@@ -60,6 +63,11 @@ export function getBookFromElement(element: Element): Book
 
         throw error;
     }
+}
+
+function isPreview(element: Element): boolean
+{
+    return ((element instanceof HTMLElement) && (element.dataset.koboGizmo === "PreviewLibraryItem"));
 }
 
 /**

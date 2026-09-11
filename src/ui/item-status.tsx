@@ -57,6 +57,7 @@ export function setupItemStatus(book: Book): void
     if (!containersCache.has(container))
     {
         containersCache.add(container);
+        container.classList.remove("buy-now");
     container.replaceChildren();
     }
 
