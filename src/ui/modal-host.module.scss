@@ -43,7 +43,7 @@
         border: 0;
         padding: 0 15px;
         min-height: 35px;
-        background-image: url(https://static.kobo.com/1.0.1.4467/Images/icons/close.svg);
+        background-image: url(../assets/close.svg);
         background-size: 1.5rem 1.5rem;
         background-position: center;
         background-repeat: no-repeat;
@@ -51,7 +51,7 @@
 
         &:is(:hover, :focus, :active)
         {
-            background-image: url(https://static.kobo.com/1.0.1.4467/Images/icons/close-active.png);
+            background-image: url(../assets/close-active.svg);
             background-color: var(--update-checker--secondary-color);
         }
     }
