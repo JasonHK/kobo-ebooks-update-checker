@@ -7,6 +7,11 @@ import { LL } from "../locales";
 import { useGlobals } from "./hooks/globals";
 import classes from "./item-status.module.scss";
 
+/**
+ * A cache of item status containers.
+ */
+const containersCache = new WeakSet<Element>();
+
 interface ItemStatusProps
 {
     book: Book;
@@ -34,6 +39,11 @@ function ItemStatus(props: ItemStatusProps): ComponentChildren
     );
 };
 
+/**
+ * Sets up the item status for a given book.
+ * 
+ * @param book A book to set up the item status.
+ */
 export function setupItemStatus(book: Book): void
 {
     const element = getElementByBook(book);

@@ -25,6 +25,9 @@ function LibraryActions({ book }: LibraryActionsProps): ComponentChildren
     );
 };
 
+/**
+ * Sets up the library actions for all books in the library.
+ */
 export function setupLibraryActions(): void
 {
     const elements = document.querySelectorAll(LIBRARY_BOOKS);

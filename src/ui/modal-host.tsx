@@ -58,6 +58,9 @@ function Dialog(props: DialogProps): ComponentChildren
     );
 }
 
+/**
+ * The host component for rendering modals.
+ */
 export function ModalHost(): ComponentChildren
 {
     const { modals, closeModal } = useGlobals();

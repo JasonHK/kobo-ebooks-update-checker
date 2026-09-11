@@ -28,6 +28,9 @@ function SecondaryControls(): ComponentChildren
     );
 };
 
+/**
+ * Sets up the secondary controls for the library page.
+ */
 export function setupSecondaryControls(): void
 {
     const grid = document.querySelector(".secondary-controls");
