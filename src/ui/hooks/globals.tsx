@@ -1,7 +1,6 @@
 import type { ComponentChildren } from "preact";
 import { useSyncExternalStore } from "preact/compat";
 
-import type { BookStatus } from "../../core/status";
 import { LL } from "../../locales";
 
 interface GlobalsStore
@@ -20,7 +19,7 @@ export interface Globals
 
     readonly checkStates: CheckStates;
     beginCheck(scope: CheckScope, total?: number): void;
-    updateProgress(done: number, total: number): void;
+    incrementProgress(): void;
     endCheck(): void;
 
     getBookStatusById(id: string): BookStatus;
@@ -59,10 +58,10 @@ function emit(): void
     }
 }
 
-// ▙▗▌     ▌   ▜ 
-// ▌▘▌▞▀▖▞▀▌▝▀▖▐ 
-// ▌ ▌▌ ▌▌ ▌▞▀▌▐ 
-// ▘ ▘▝▀ ▝▀▘▝▀▘ ▘
+// ▙▗▌     ▌   ▜    
+// ▌▘▌▞▀▖▞▀▌▝▀▖▐ ▞▀▘
+// ▌ ▌▌ ▌▌ ▌▞▀▌▐ ▝▀▖
+// ▘ ▘▝▀ ▝▀▘▝▀▘ ▘▀▀ 
 
 export interface Modal
 {
@@ -70,22 +69,23 @@ export interface Modal
     title: ComponentChildren;
     dismissible: boolean;
     content: ComponentChildren;
-    footer: ComponentChildren;
+    actions: ComponentChildren;
     onClose?: () => void;
 }
 
-type ModalRequiredFields = "content" | "footer";
+type ModalRequiredFields = "content";
 export type ModalInit = Pick<Modal, ModalRequiredFields> & Partial<Exclude<Modal, ModalRequiredFields>>;
 
 function openModal(init: ModalInit): string
 {
-    const id = init?.id ?? crypto.randomUUID();
-    const title = init?.title ?? LL.modals.title();
-    const dismissible = init?.dismissible ?? true;
+    const id = init.id ?? crypto.randomUUID();
+    const title = init.title ?? LL.modals.titles.message();
+    const dismissible = init.dismissible ?? true;
+    const actions = init.actions ?? null;
     
     store = {
         ...store,
-        modals: [...store.modals, { ...init, id, title, dismissible }],
+        modals: [...store.modals, { ...init, id, title, dismissible, actions }],
     };
     emit();
 
@@ -157,14 +157,13 @@ function beginCheck(scope: CheckScope, total = 0): void
     emit();
 }
 
-function updateProgress(done: number, total: number): void
+function incrementProgress(): void
 {
     store = {
         ...store,
         checkStates: {
             ...store.checkStates,
-            total,
-            done,
+            done: store.checkStates.done + 1,
         },
     };
     emit();
@@ -189,6 +188,22 @@ function endCheck(): void
 // ▌ ▌▌ ▌▌ ▌▛▚ ▖ ▌▐ ▖▞▀▌▐ ▖▌ ▌▝▀▖▛▀ ▝▀▖
 // ▀▀ ▝▀ ▝▀ ▘ ▘▝▀  ▀ ▝▀▘ ▀ ▝▀▘▀▀ ▝▀▘▀▀ 
 
+export type StatusType =
+    | "pending"
+    | "checking"
+    | "latest"
+    | "outdated"
+    | "preview"
+    | "skipped"
+    | "failed";
+
+export interface BookStatus
+{
+    type: StatusType;
+    message?: string;
+    error?: unknown;
+}
+
 export type BookStatuses = Map<string, BookStatus>;
 
 function setBookStatusById(id: string, status: BookStatus): void
@@ -212,7 +227,7 @@ function getBookStatusById(id: string): BookStatus
 
 export function useGlobals(): Globals
 {
-    const { modals, checkStates } = useSyncExternalStore(subscribe, getSnapshot);
+    const { modals, checkStates, bookStatuses } = useSyncExternalStore(subscribe, getSnapshot);
 
     return {
         modals,
@@ -222,7 +237,7 @@ export function useGlobals(): Globals
 
         checkStates,
         beginCheck,
-        updateProgress,
+        incrementProgress,
         endCheck,
 
         getBookStatusById,

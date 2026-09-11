@@ -6,7 +6,8 @@ import { ParsingError, UnlistedError } from "../../core/errors";
 import { LL } from "../../locales";
 
 import { setupItemStatus } from "../item-status";
-import { useGlobals, type CheckScope, type CheckStates } from "./globals";
+import { useGlobals, type CheckScope, type CheckStates, type StatusType } from "./globals";
+import classes from "./check-actions.module.scss";
 
 export interface CheckActions
 {
@@ -16,22 +17,50 @@ export interface CheckActions
     checkWholeLibrary(): Promise<void>;
 }
 
+const CACHED_STATUSES = new Set<StatusType>(
+[
+    "latest",
+    "outdated",
+    "preview",
+]);
+
+const SUMMARY_STATUSES: Exclude<StatusType, "pending" | "checking">[] = [
+    "latest",
+    "outdated",
+    "preview",
+    "skipped",
+    "failed",
+];
+
 const queue = new Queue({ autostart: true, concurrency: 5 });
 
 export function useCheckActions(): CheckActions
 {
     const {
+        openModal,
+        closeModal,
+
         checkStates,
         beginCheck,
-        updateProgress,
+        incrementProgress,
         endCheck,
         
+        getBookStatusById,
         setBookStatusById,
     } = useGlobals();
-    const { isChecking, scope } = checkStates;
+    const { isChecking, scope, total, done } = checkStates;
 
     async function checkUpdate(book: Book, scope: CheckScope): Promise<void>
     {
+        const status = getBookStatusById(book.id);
+        if (CACHED_STATUSES.has(status.type)) { return; }
+
+        if (book.isPreview)
+        {
+            setBookStatusById(book.id, { type: "preview" });
+            return;
+        }
+
         setBookStatusById(book.id, { type: "checking" });
 
         try
@@ -70,7 +99,7 @@ export function useCheckActions(): CheckActions
         }
         finally
         {
-            updateProgress(done + 1, total);
+            incrementProgress();
         }
     }
 
@@ -81,8 +110,53 @@ export function useCheckActions(): CheckActions
 
         queue.addEventListener("end", () =>
         {
-            // TODO
-            endCheck();
+            if (scope === "page")
+            {
+                const booksByStatus = books.reduce((groups, book) =>
+                {
+                    const status = getBookStatusById(book.id).type;
+                    const statusBooks = groups.get(status) ?? [];
+
+                    statusBooks.push(book);
+                    groups.set(status, statusBooks);
+
+                    return groups;
+                }, new Map<StatusType, Book[]>());
+
+                const id = openModal(
+                    {
+                        title: LL.modals.titles.checkCompleted(),
+                        dismissible: false,
+                        content:
+                        <>
+                            <p class={classes.message}>{LL.modals.contents.finishCheckingPage(books.length)}</p>
+                            {SUMMARY_STATUSES.map((status) =>
+                            {
+                                const books = booksByStatus.get(status);
+                                if (!books || (books.length === 0)) { return null; }
+
+                                return (
+                                    <details class={classes.details}>
+                                        <summary>{LL.modals.contents.statusSummaries[status](books.length)}</summary>
+                                        <ul>
+                                            {books.map((book) => (<li>{book.title}</li>))}
+                                        </ul>
+                                    </details>
+                                );
+                            })}
+                        </>,
+                        actions: 
+                        <>
+                            <button class="primary">{LL.modals.actions.saveReport()}</button>
+                            <button onClick={() => closeModal(id)}>{LL.modals.actions.gotIt()}</button>
+                        </>,
+                        onClose: endCheck,
+                    });
+            }
+            else
+            {
+                endCheck();
+            }
         }, { once: true });
 
         for (const book of books)

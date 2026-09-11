@@ -21,7 +21,7 @@ function ItemStatus(props: ItemStatusProps): ComponentChildren
 {
     const { book } = props;
 
-    const { getBookStatusById } = useGlobals();
+    const { openModal, closeModal, getBookStatusById } = useGlobals();
     const { type, message, error } = getBookStatusById(book.id);
     if (type !== "failed")
     {
@@ -32,8 +32,17 @@ function ItemStatus(props: ItemStatusProps): ComponentChildren
         );
     }
 
+    function openMessageModal(): void
+    {
+        const id = openModal(
+            {
+                content: <p>{message}</p>,
+                actions: <button onClick={() => closeModal(id)}>{LL.modals.actions.gotIt()}</button>,
+            });
+    }
+
     return (
-        <a class={clsx(classes[type])} onClick={() => {}}>
+        <a class={clsx(classes[type])} onClick={openMessageModal}>
             {LL.status[type]()}
         </a>
     );
@@ -58,7 +67,7 @@ export function setupItemStatus(book: Book): void
     {
         containersCache.add(container);
         container.classList.remove("buy-now");
-    container.replaceChildren();
+        container.replaceChildren();
     }
 
     render(<ItemStatus book={book} />, container);

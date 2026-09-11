@@ -21,28 +21,37 @@ function Dialog(props: DialogProps): ComponentChildren
     {
         const dialog = ref.current;
         if (!dialog) { return; }
-
         if (!dialog.open) { dialog.showModal(); }
 
-        function onCancel(e: Event)
+        function onKeyDown(event: KeyboardEvent): void
         {
-            e.preventDefault();
-            if (modal.dismissible === true)
+            if ((event.key === "Escape") && dialog?.open && !modal.dismissible)
+            {
+                event.preventDefault();
+            }
+        }
+
+        function onCancel(event: Event): void
+        {
+            event.preventDefault();
+            if (modal.dismissible)
             {
                 closeModal(modal.id);
             }
         }
 
-        function onClose()
+        function onClose(): void
         {
             closeModal(modal.id);
         }
 
+        dialog.addEventListener("keydown", onKeyDown);
         dialog.addEventListener("cancel", onCancel);
         dialog.addEventListener("close", onClose);
 
         return (() =>
         {
+            dialog.removeEventListener("keydown", onKeyDown);
             dialog.removeEventListener("cancel", onCancel);
             dialog.removeEventListener("close", onClose);
             if (dialog.open) { dialog.close(); }
@@ -51,11 +60,12 @@ function Dialog(props: DialogProps): ComponentChildren
 
     return (
         <dialog ref={ref} class={classes.dialog}>
-            <button class={classes.close} onClick={() => closeModal(modal.id)}></button>
+            {modal.dismissible && (<button class={classes.close} onClick={() => closeModal(modal.id)}></button>)}
             <header>
                 <h2>{modal.title}</h2>
             </header>
             {modal.content}
+            {modal.actions && (<footer>{modal.actions}</footer>)}
         </dialog>
     );
 }
@@ -69,6 +79,8 @@ export function ModalHost(): ComponentChildren
     if (modals.length === 0) { return null; }
 
     return createPortal(
-        modals.map((modal, i) => (<Dialog key={modal.id} modal={modal} index={i} closeModal={closeModal} />)),
+        <>
+            {modals.map((modal, i) => (<Dialog key={modal.id} modal={modal} index={i} closeModal={closeModal} />))}
+        </>,
         setupOverlayContainer());
 }
