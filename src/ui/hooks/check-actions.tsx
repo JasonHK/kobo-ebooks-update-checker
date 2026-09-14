@@ -73,6 +73,7 @@ export function useCheckActions(): CheckActions
         openModal,
         closeModal,
         
+        fetchStates,
         setTotalPages,
         incrementFetchedPages,
         getFetchedBooks,
@@ -88,6 +89,7 @@ export function useCheckActions(): CheckActions
         getBookStatusById,
         setBookStatusById,
     } = useGlobals();
+    const { isFetched } = fetchStates;
     const { isChecking, scope, totalBooks, checkedBooks } = checkStates;
 
     async function checkUpdate(book: Book, scope: CheckScope): Promise<void>
@@ -303,6 +305,32 @@ export function useCheckActions(): CheckActions
 
         if (!continueCheck) { return; }
 
+        let bypassReloading: boolean = false;
+        if (isFetched)
+        {
+            bypassReloading = await new Promise<boolean>((resolve) =>
+            {
+                function onBypassClicked(): void
+                {
+                    resolve(true);
+                    closeModal(id);
+                }
+                
+                const id = openModal(
+                    {
+                        title: LL.modals.titles.warning(),
+                        dismissible: false,
+                        content: <p>{LL.modals.contents.confirmReloadLibrary()}</p>,
+                        actions:
+                        <>
+                            <button class="primary" onClick={() => closeModal(id)}>{LL.modals.actions.reloadLibrary()}</button>
+                            <button onClick={onBypassClicked}>{LL.modals.actions.bypassReloading()}</button>
+                        </>,
+                        onClose: () => resolve(false),
+                    });
+            });
+        }
+
         const id = openModal(
             {
                 title: LL.modals.titles.checkingInProgress(),
@@ -311,7 +339,7 @@ export function useCheckActions(): CheckActions
                 actions: <button onClick={() => closeModal(id)}>{LL.modals.actions.cancel()}</button>
             });
 
-        await loadLibraryBooks();
+        if (!bypassReloading) { await loadLibraryBooks(); }
         const results = await runBatchCheck(getFetchedBooks(), "library");
         closeModal(id);
         showResultModal(results, "library");

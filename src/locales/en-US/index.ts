@@ -28,6 +28,7 @@ const en_US: BaseTranslation = {
         },
         contents: {
             confirmCheckLibrary: "Checking for the entire library may take a while and trigger many requests. Continue?",
+            confirmReloadLibrary: "Existing library cache was found, do you want to reload the library from the server? Previously checked books with successful results will be kept.",
             fetchLibrary: "Fetch Library",
             fetchLibraryProgress: "{fetchedPages:number} of {totalPages:number} Page{{totalPages:s}}",
             checkUpdate: "Check Update",
@@ -44,6 +45,8 @@ const en_US: BaseTranslation = {
         },
         actions: {
             startChecking: "Start Checking",
+            reloadLibrary: "Reload Library",
+            bypassReloading: "Bypass Reloading",
             saveReport: "Save Report",
             gotIt: "Got It",
             cancel: "Cancel",

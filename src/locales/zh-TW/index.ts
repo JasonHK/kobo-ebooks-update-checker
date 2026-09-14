@@ -28,6 +28,7 @@ const zh_TW: Translation = {
         },
         contents: {
             confirmCheckLibrary: "檢查整個書庫可能需要一段時間，並會發出大量請求。要繼續嗎？",
+            confirmReloadLibrary: "已找到現有的書庫快取，是否要從伺服器重新載入書庫？先前檢查過且結果成功的書籍將會保留。",
             fetchLibrary: "檢索書庫",
             fetchLibraryProgress: "{fetchedPages}／{totalPages} 頁",
             checkUpdate: "檢查更新",
@@ -44,6 +45,8 @@ const zh_TW: Translation = {
         },
         actions: {
             startChecking: "開始檢查",
+            reloadLibrary: "重新載入書庫",
+            bypassReloading: "略過重新載入",
             saveReport: "儲存報告",
             gotIt: "了解",
             cancel: "取消",
