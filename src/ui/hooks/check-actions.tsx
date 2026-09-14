@@ -95,7 +95,11 @@ export function useCheckActions(): CheckActions
     async function checkUpdate(book: Book, scope: CheckScope): Promise<void>
     {
         const status = getBookStatusById(book.id);
-        if (CACHED_STATUSES.has(status.type)) { return; }
+        if (CACHED_STATUSES.has(status.type))
+        {
+            incrementCheckedBooks();
+            return;
+        }
 
         if (book.isPreview)
         {
