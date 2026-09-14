@@ -90,7 +90,7 @@ export function useCheckActions(): CheckActions
         setBookStatusById,
     } = useGlobals();
     const { isFetched } = fetchStates;
-    const { isChecking, scope, totalBooks, checkedBooks } = checkStates;
+    const { isChecking } = checkStates;
 
     async function checkUpdate(book: Book, scope: CheckScope): Promise<void>
     {
@@ -237,7 +237,7 @@ export function useCheckActions(): CheckActions
     async function checkSingleBook(book: Book): Promise<void>
     {
         if (isChecking/*  && (scope !== "single") */) { return; }
-        beginCheck("single", 0);
+        beginCheck("single", 1);
 
         setupItemStatus(book);
         await checkUpdate(book, "single");
@@ -308,6 +308,7 @@ export function useCheckActions(): CheckActions
         });
 
         if (!continueCheck) { return; }
+        beginCheck("library");
 
         let bypassReloading: boolean = false;
         if (isFetched)
