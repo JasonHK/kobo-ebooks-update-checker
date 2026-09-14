@@ -24,9 +24,9 @@ export const Product = GizmoConfig;
  * @param url The URL to fetch the product from.
  * @returns A promise that resolves to the product.
  */
-export async function fetchProductFromUrl(url: string): Promise<Product>
+export async function fetchProductFromUrl(url: string, signal?: AbortSignal): Promise<Product>
 {
-    const response = await fetch(url, { credentials: "omit" });
+    const response = await fetch(url, { signal, credentials: "omit" });
     if (!response.ok)
     {
         if (response.status === 404)

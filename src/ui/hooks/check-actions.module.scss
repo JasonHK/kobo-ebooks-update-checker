@@ -1,3 +1,25 @@
+.step
+{
+    width: 400px;
+    text-align: center;
+
+    @media (max-width: 568px)
+    {
+        width: 100%;
+    }
+
+    h3
+    {
+        margin: 6px 0;
+        font-size: 1.4rem;
+    }
+
+    p
+    {
+        font-size: 1.3rem;
+    }
+}
+
 .message
 {
     width: 100%;
@@ -42,8 +64,8 @@
 
     ul
     {
-        padding: 0.75rem 0 1rem;
+        padding: 0.75rem 0 1rem 3rem;
         font-size: 1.35rem;
-        list-style: disc inside;
+        list-style: disc;
     }
 }

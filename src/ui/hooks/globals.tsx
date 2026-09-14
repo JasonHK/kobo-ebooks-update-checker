@@ -1,11 +1,13 @@
 import type { ComponentChildren } from "preact";
 import { useSyncExternalStore } from "preact/compat";
 
+import type { Book } from "../../core/books";
 import { LL } from "../../locales";
 
 interface GlobalsStore
 {
     modals: Modal[];
+    fetchStates: FetchStates;
     checkStates: CheckStates;
     bookStatuses: BookStatuses;
 }
@@ -17,9 +19,18 @@ export interface Globals
     closeModal(id?: string): void;
     closeAllModals(): void;
 
+    readonly fetchStates: FetchStates;
+    setTotalPages(totalPages: number): void;
+    incrementFetchedPages(): void;
+    getFetchedBooks(): Book[];
+    pushFetchedBooks(books: Book[]): void;
+    resetFetchStates(): void;
+
     readonly checkStates: CheckStates;
-    beginCheck(scope: CheckScope, total?: number): void;
-    incrementProgress(): void;
+    beginCheck(scope: CheckScope, totalBooks?: number): void;
+    setTotalBooks(totalBooks: number): void;
+    incrementTotalBooks(amount: number): void;
+    incrementCheckedBooks(): void;
     endCheck(): void;
 
     getBookStatusById(id: string): BookStatus;
@@ -28,11 +39,17 @@ export interface Globals
 
 let store: GlobalsStore = {
     modals: [],
+    fetchStates: {
+        isFetched: false,
+        totalPages: 0,
+        fetchedPages: 0,
+        fetchedBooks: [],
+    },
     checkStates: {
         isChecking: false,
         scope: null,
-        total: 0,
-        done: 0,
+        totalBooks: 0,
+        checkedBooks: 0,
     },
     bookStatuses: new Map(),
 };
@@ -128,6 +145,82 @@ function closeAllModals(): void
     emit();
 }
 
+// ▛▀▘  ▐     ▌  ▞▀▖▐     ▐        
+// ▙▄▞▀▖▜▀ ▞▀▖▛▀▖▚▄ ▜▀ ▝▀▖▜▀ ▞▀▖▞▀▘
+// ▌ ▛▀ ▐ ▖▌ ▖▌ ▌▖ ▌▐ ▖▞▀▌▐ ▖▛▀ ▝▀▖
+// ▘ ▝▀▘ ▀ ▝▀ ▘ ▘▝▀  ▀ ▝▀▘ ▀ ▝▀▘▀▀ 
+
+export interface FetchStates
+{
+    isFetched: boolean;
+    totalPages: number;
+    fetchedPages: number;
+    fetchedBooks: Book[];
+}
+
+function setTotalPages(totalPages: number): void
+{
+    store = {
+        ...store,
+        fetchStates: {
+            ...store.fetchStates,
+            totalPages,
+        },
+    };
+    emit();
+}
+
+function incrementFetchedPages(): void
+{
+    store = {
+        ...store,
+        fetchStates: {
+            ...store.fetchStates,
+            fetchedPages: store.fetchStates.fetchedPages + 1,
+        },
+    };
+
+    if (store.fetchStates.fetchedPages === store.fetchStates.totalPages)
+    {
+        store.fetchStates.isFetched = true;
+    }
+    emit();
+}
+
+function getFetchedBooks(): Book[]
+{
+    return store.fetchStates.fetchedBooks;
+}
+
+function pushFetchedBooks(books: Book[]): void
+{
+    store = {
+        ...store,
+        fetchStates: {
+            ...store.fetchStates,
+            fetchedBooks: [
+                ...store.fetchStates.fetchedBooks,
+                ...books,
+            ],
+        },
+    };
+    emit();
+}
+
+function resetFetchStates(): void
+{
+    store = {
+        ...store,
+        fetchStates: {
+            isFetched: false,
+            totalPages: 0,
+            fetchedPages: 0,
+            fetchedBooks: [],
+        },
+    };
+    emit();
+}
+
 // ▞▀▖▌        ▌  ▞▀▖▐     ▐        
 // ▌  ▛▀▖▞▀▖▞▀▖▌▗▘▚▄ ▜▀ ▝▀▖▜▀ ▞▀▖▞▀▘
 // ▌ ▖▌ ▌▛▀ ▌ ▖▛▚ ▖ ▌▐ ▖▞▀▌▐ ▖▛▀ ▝▀▖
@@ -139,31 +232,55 @@ export interface CheckStates
 {
     isChecking: boolean;
     scope: CheckScope | null;
-    total: number;
-    done: number;
+    totalBooks: number;
+    checkedBooks: number;
 }
 
-function beginCheck(scope: CheckScope, total = 0): void
+function beginCheck(scope: CheckScope, totalBooks: number = 0): void
 {
     store = {
         ...store,
         checkStates: {
             isChecking: true,
             scope,
-            total,
-            done: 0,
+            totalBooks,
+            checkedBooks: 0,
         },
     };
     emit();
 }
 
-function incrementProgress(): void
+function setTotalBooks(totalBooks: number): void
 {
     store = {
         ...store,
         checkStates: {
             ...store.checkStates,
-            done: store.checkStates.done + 1,
+            totalBooks,
+        },
+    };
+    emit();
+}
+
+function incrementTotalBooks(amount: number): void
+{
+    store = {
+        ...store,
+        checkStates: {
+            ...store.checkStates,
+            totalBooks: store.checkStates.totalBooks + amount,
+        },
+    };
+    emit();
+}
+
+function incrementCheckedBooks(): void
+{
+    store = {
+        ...store,
+        checkStates: {
+            ...store.checkStates,
+            checkedBooks: store.checkStates.checkedBooks + 1,
         },
     };
     emit();
@@ -176,8 +293,8 @@ function endCheck(): void
         checkStates: {
             isChecking: false,
             scope: null,
-            total: 0,
-            done: 0,
+            totalBooks: 0,
+            checkedBooks: 0,
         },
     };
     emit();
@@ -227,7 +344,7 @@ function getBookStatusById(id: string): BookStatus
 
 export function useGlobals(): Globals
 {
-    const { modals, checkStates, bookStatuses } = useSyncExternalStore(subscribe, getSnapshot);
+    const { modals, fetchStates, checkStates, bookStatuses } = useSyncExternalStore(subscribe, getSnapshot);
 
     return {
         modals,
@@ -235,9 +352,18 @@ export function useGlobals(): Globals
         closeModal,
         closeAllModals,
 
+        fetchStates,
+        setTotalPages,
+        incrementFetchedPages,
+        getFetchedBooks,
+        pushFetchedBooks,
+        resetFetchStates,
+
         checkStates,
         beginCheck,
-        incrementProgress,
+        setTotalBooks,
+        incrementTotalBooks,
+        incrementCheckedBooks,
         endCheck,
 
         getBookStatusById,

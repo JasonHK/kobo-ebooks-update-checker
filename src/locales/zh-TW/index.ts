@@ -22,10 +22,18 @@ const zh_TW: Translation = {
     modals: {
         titles: {
             message: "訊息",
+            warning: "警告",
+            checkingInProgress: "檢查中……",
             checkCompleted: "檢查完成",
         },
         contents: {
+            confirmCheckLibrary: "檢查整個書庫可能需要一段時間，並會發出大量請求。要繼續嗎？",
+            fetchLibrary: "檢索書庫",
+            fetchLibraryProgress: "{fetchedPages}／{totalPages} 頁",
+            checkUpdate: "檢查更新",
+            checkUpdateProgress: "{checkedBooks}／{totalBooks} 本書",
             finishCheckingPage: "完成檢查本頁。共檢查了 {0} 本圖書。",
+            finishCheckingLibrary: "完成檢查書庫。共檢查了 {0} 本圖書。",
             statusSummaries: {
                 latest: "最新：{0} 本",
                 outdated: "有更新：{0} 本",
@@ -35,6 +43,7 @@ const zh_TW: Translation = {
             },
         },
         actions: {
+            startChecking: "開始檢查",
             saveReport: "儲存報告",
             gotIt: "了解",
             cancel: "取消",

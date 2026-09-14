@@ -1,0 +1,49 @@
+.progress
+{
+    position: relative;
+    border-radius: 10px;
+    width: 200px;
+    height: 10px;
+    box-shadow: inset 0 0 0 1px #ccd6dd;
+    overflow: hidden;
+    background: #f1f6fa;
+    text-indent: 100%;
+
+    &::after
+    {
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: inherit;
+        width: var(--progress, 0);
+        height: 100%;
+        background-color: currentColor;
+        content: "";
+        // transition: width 0.5s ease-in-out;
+    }
+
+    &.indeterminate::after
+    {
+        --progress: 20%;
+        transition: none;
+        animation: 1s linear infinite alternate indeterminate;
+    }
+
+    &.no-transition::after
+    {
+        transition: none;
+    }
+}
+
+
+@keyframes indeterminate
+{
+    from
+    {
+        transform: translateX(0%);
+    }
+    to
+    {
+        transform: translateX(calc(100% / 0.2 - 100%));
+    }
+}
