@@ -1,18 +1,20 @@
+import type { ComponentChildren } from "preact";
+import { useId } from "preact/hooks";
 import Queue from "queue";
 
 import { fetchPageFromUrl, getPageFromDocument } from "../../core/pages";
 import { getBooksFromDocument, type Book } from "../../core/books";
 import { fetchProductFromUrl } from "../../core/products";
 import { NetworkError, ParsingError, UnlistedError } from "../../core/errors";
+import { LIBRARY_PAGINATION } from "../../core/selectors";
 import { LL } from "../../locales";
 
 import { setupItemStatus } from "../item-status";
+import { Progress } from "../progress";
+
 import { useGlobals, type CheckScope, type CheckStates, type StatusType } from "./globals";
 import classes from "./check-actions.module.scss";
-import { LIBRARY_PAGINATION } from "../../core/selectors";
-import type { ComponentChildren } from "preact";
-import { Progress } from "../progress";
-import { useId } from "preact/hooks";
+import { useAbortController } from "./abort-controller";
 
 export interface CheckActions
 {
@@ -91,6 +93,7 @@ export function useCheckActions(): CheckActions
     } = useGlobals();
     const { isFetched } = fetchStates;
     const { isChecking } = checkStates;
+    const { controller, setController } = useAbortController();
 
     async function checkUpdate(book: Book, scope: CheckScope): Promise<void>
     {
@@ -112,7 +115,7 @@ export function useCheckActions(): CheckActions
 
         try
         {
-            const product = await fetchProductFromUrl(book.storeUrl);
+            const product = await fetchProductFromUrl(book.storeUrl, controller.signal);
             if (product.productId === book.productId)
             {
                 setBookStatusById(book.id, { type: "latest" });
@@ -147,11 +150,19 @@ export function useCheckActions(): CheckActions
             {
                 setBookStatusById(
                     book.id,
-                {
-                    type: "failed",
-                    message: LL.error.unknown(),
-                    error: String(error.message),
-                });
+                    {
+                        type: "failed",
+                        message: LL.error.unknown(),
+                        error: String(error.message),
+                    });
+            }
+            else if ((error instanceof DOMException) && (error.name === "AbortError"))
+            {
+                setBookStatusById(
+                    book.id,
+                    {
+                        type: "skipped",
+                    });
             }
         }
         finally
@@ -258,22 +269,32 @@ export function useCheckActions(): CheckActions
     {
         resetFetchStates();
 
-        const currentPage = getPageFromDocument(document);
-        let page = await fetchPageFromUrl(currentPage.first);
-        setTotalPages(page.total);
-
-        const books = getBooksFromDocument(page.document);
-        pushFetchedBooks(books);
-        incrementFetchedPages();
-
-        while (page.next !== null)
+        try
         {
-            page = await fetchPageFromUrl(page.next);
-            
+            const currentPage = getPageFromDocument(document);
+            let page = await fetchPageFromUrl(currentPage.first, controller.signal);
+            setTotalPages(page.total);
+
             const books = getBooksFromDocument(page.document);
             pushFetchedBooks(books);
             incrementFetchedPages();
-            incrementTotalBooks(books.length);
+
+            while (page.next !== null)
+            {
+                page = await fetchPageFromUrl(page.next, controller.signal);
+                
+                const books = getBooksFromDocument(page.document);
+                pushFetchedBooks(books);
+                incrementFetchedPages();
+                incrementTotalBooks(books.length);
+            }
+        }
+        catch (error: unknown)
+        {
+            if (!(error instanceof DOMException) || (error.name !== "AbortError"))
+            {
+                throw error;
+            }
         }
     }
 
@@ -341,12 +362,14 @@ export function useCheckActions(): CheckActions
                 title: LL.modals.titles.checkingInProgress(),
                 dismissible: false,
                 content: <LibraryCheckingProgress />,
-                actions: <button onClick={() => closeModal(id)}>{LL.modals.actions.cancel()}</button>
+                actions: <button onClick={() => controller.abort()}>{LL.modals.actions.cancel()}</button>
             });
 
         if (!bypassReloading) { await loadLibraryBooks(); }
         const results = await runBatchCheck(getFetchedBooks(), "library");
         closeModal(id);
+
+        setController(new AbortController());
         showResultModal(results, "library");
     }
 
