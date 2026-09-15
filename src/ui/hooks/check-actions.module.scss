@@ -1,0 +1,71 @@
+.step
+{
+    width: 400px;
+    text-align: center;
+
+    @media (max-width: 568px)
+    {
+        width: 100%;
+    }
+
+    h3
+    {
+        margin: 6px 0;
+        font-size: 1.4rem;
+    }
+
+    p
+    {
+        font-size: 1.3rem;
+    }
+}
+
+.message
+{
+    width: 100%;
+    text-align: start;
+}
+
+.details
+{
+    border-top: 1px solid black;
+    width: 100%;
+
+    &:last-of-type
+    {
+        border-bottom: 1px solid black;
+    }
+
+    summary
+    {
+        position: relative;
+        padding: 0.5rem 0;
+        width: 100%;
+        cursor: pointer;
+
+        &::after
+        {
+            position: absolute;
+            right: 0;
+            width: 1lh;
+            height: 1lh;
+            content: "";
+            background: url("../../assets/details-toggle.svg") no-repeat center;
+            background-size: contain;
+            transform: scale(0.6);
+            transition: 200ms linear;
+        }
+    }
+
+    &[open] summary::after
+    {
+        transform: scale(0.6) rotate(-90deg);
+    }
+
+    ul
+    {
+        padding: 0.75rem 0 1rem 3rem;
+        font-size: 1.35rem;
+        list-style: disc;
+    }
+}

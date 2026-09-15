@@ -1,0 +1,74 @@
+import { render, type ComponentChildren } from "preact";
+import { clsx } from "clsx";
+
+import { getElementByBook, type Book } from "../core/books";
+import { LL } from "../locales";
+
+import { useGlobals } from "./hooks/globals";
+import classes from "./item-status.module.scss";
+
+/**
+ * A cache of item status containers.
+ */
+const containersCache = new WeakSet<Element>();
+
+interface ItemStatusProps
+{
+    book: Book;
+}
+
+function ItemStatus(props: ItemStatusProps): ComponentChildren
+{
+    const { book } = props;
+
+    const { openModal, closeModal, getBookStatusById } = useGlobals();
+    const { type, message, error } = getBookStatusById(book.id);
+    if (type !== "failed")
+    {
+        return (
+            <span class={clsx(classes[type])}>
+                {LL.status[type]()}
+            </span>
+        );
+    }
+
+    function openMessageModal(): void
+    {
+        const id = openModal(
+            {
+                content: <p>{message}</p>,
+                actions: <button onClick={() => closeModal(id)}>{LL.modals.actions.gotIt()}</button>,
+            });
+    }
+
+    return (
+        <a class={clsx(classes[type])} onClick={openMessageModal}>
+            {LL.status[type]()}
+        </a>
+    );
+};
+
+/**
+ * Sets up the item status for a given book.
+ * 
+ * @param book A book to set up the item status.
+ */
+export function setupItemStatus(book: Book): void
+{
+    const element = getElementByBook(book);
+    if (!element) { throw new Error("Unable to find the element for the book"); }
+
+    const container = element.querySelector(".item-status");
+    if (!container) { throw new Error("Unable to find the element for item status"); }
+
+    // Prevent replaceChildren from being called multiple times on the same container, which would
+    // cause the status to disappear when the component is re-rendered.
+    if (!containersCache.has(container))
+    {
+        containersCache.add(container);
+        container.classList.remove("buy-now");
+        container.replaceChildren();
+    }
+
+    render(<ItemStatus book={book} />, container);
+}
