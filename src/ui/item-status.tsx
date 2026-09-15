@@ -4,7 +4,9 @@ import { clsx } from "clsx";
 import { getElementByBook, type Book } from "../core/books";
 import { LL } from "../locales";
 
-import { useGlobals } from "./hooks/globals";
+import { closeModal, openModal } from "./hooks/modals";
+import { useBookStatuses } from "./hooks/book-statuses";
+
 import classes from "./item-status.module.scss";
 
 /**
@@ -21,8 +23,8 @@ function ItemStatus(props: ItemStatusProps): ComponentChildren
 {
     const { book } = props;
 
-    const { openModal, closeModal, getBookStatusById } = useGlobals();
-    const { type, message, error } = getBookStatusById(book.id);
+    const statuses = useBookStatuses();
+    const { type, message, error } = statuses.get(book.id) ?? { type: "pending" };
     if (type !== "failed")
     {
         return (

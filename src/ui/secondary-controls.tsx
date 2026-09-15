@@ -2,20 +2,21 @@ import { render, type ComponentChildren } from "preact";
 
 import { LL } from "../locales";
 
+import { useCheckStates } from "./hooks/check-states";
 import { useCheckActions } from "./hooks/check-actions";
-import classes from "./secondary-controls.module.scss";
 
+import classes from "./secondary-controls.module.scss";
 function SecondaryControls(): ComponentChildren
 {
-    const { checkStates, checkWholePage, checkWholeLibrary } = useCheckActions();
-    const { isChecking, scope } = checkStates;
+    const { isChecking, checkScope } = useCheckStates();
+    const { checkWholePage, checkWholeLibrary } = useCheckActions();
 
     return (
         <div class={classes.controls}>
             <ul>
                 <li>
                     <button class={classes.button} disabled={isChecking} onClick={() => checkWholePage()}>
-                        {(isChecking && (scope === "page")) ? LL.secondaryControls.checkPageInProgress() : LL.secondaryControls.checkPage()}
+                        {(isChecking && (checkScope === "page")) ? LL.secondaryControls.checkPageInProgress() : LL.secondaryControls.checkPage()}
                     </button>
                 </li>
                 <li>

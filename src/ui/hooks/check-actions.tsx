@@ -2,29 +2,32 @@ import type { ComponentChildren } from "preact";
 import { useId } from "preact/hooks";
 import Queue from "queue";
 
-import { fetchPageFromUrl, getPageFromDocument } from "../../core/pages";
-import { getBooksFromDocument, type Book } from "../../core/books";
-import { fetchProductFromUrl } from "../../core/products";
 import { NetworkError, ParsingError, UnlistedError } from "../../core/errors";
+import { getBooksFromDocument, type Book } from "../../core/books";
+import { fetchPageFromUrl, getPageFromDocument } from "../../core/pages";
+import { fetchProductFromUrl } from "../../core/products";
 import { LIBRARY_PAGINATION } from "../../core/selectors";
 import { LL } from "../../locales";
 
 import { setupItemStatus } from "../item-status";
 import { Progress } from "../progress";
 
-import { useGlobals, type CheckScope, type CheckStates, type StatusType } from "./globals";
+import { openModal, closeModal } from "./modals";
+import { setAbortController, useAbortController } from "./abort-controller";
+import { useFetchStates, getFetchedBooks, incrementFetchedPages, pushFetchedBooks, resetFetchStates, setTotalPages } from "./fetch-states";
+import { incrementCheckedBooks, incrementTotalBooks, resetCheckStates, setCheckScope, useCheckStates, type CheckScope } from "./check-states";
+import { getBookStatusById, setBookStatusById, type StatusType } from "./book-statuses";
+
 import classes from "./check-actions.module.scss";
-import { useAbortController } from "./abort-controller";
 
 export interface CheckActions
 {
-    checkStates: CheckStates;
     checkSingleBook(book: Book): Promise<void>;
     checkWholePage(): Promise<void>;
     checkWholeLibrary(): Promise<void>;
 }
 
-type CheckResults = Map<StatusType, Book[]>;
+export type CheckResults = Map<StatusType, Book[]>;
 
 const CACHED_STATUSES = new Set<StatusType>(
 [
@@ -48,9 +51,8 @@ function LibraryCheckingProgress(): ComponentChildren
     const fetchHeaderId = useId();
     const checkHeaderId = useId();
 
-    const { fetchStates, checkStates } = useGlobals();
-    const { isFetched, totalPages, fetchedPages } = fetchStates;
-    const { totalBooks, checkedBooks } = checkStates;
+    const { isFetched, totalPages, fetchedPages } = useFetchStates();
+    const { totalBooks, checkedBooks } = useCheckStates();
 
     return (
         <>
@@ -71,29 +73,9 @@ function LibraryCheckingProgress(): ComponentChildren
 
 export function useCheckActions(): CheckActions
 {
-    const {
-        openModal,
-        closeModal,
-        
-        fetchStates,
-        setTotalPages,
-        incrementFetchedPages,
-        getFetchedBooks,
-        pushFetchedBooks,
-        resetFetchStates,
-
-        checkStates,
-        beginCheck,
-        incrementTotalBooks,
-        incrementCheckedBooks,
-        endCheck,
-        
-        getBookStatusById,
-        setBookStatusById,
-    } = useGlobals();
-    const { isFetched } = fetchStates;
-    const { isChecking } = checkStates;
-    const { controller, setController } = useAbortController();
+    const { isFetched } = useFetchStates();
+    const { isChecking } = useCheckStates();
+    const controller = useAbortController();
 
     async function checkUpdate(book: Book, scope: CheckScope): Promise<void>
     {
@@ -158,11 +140,7 @@ export function useCheckActions(): CheckActions
             }
             else if ((error instanceof DOMException) && (error.name === "AbortError"))
             {
-                setBookStatusById(
-                    book.id,
-                    {
-                        type: "skipped",
-                    });
+                setBookStatusById(book.id, { type: "skipped" });
             }
         }
         finally
@@ -175,7 +153,7 @@ export function useCheckActions(): CheckActions
     {
         if (books.length === 0) { return Promise.resolve(new Map()); }
 
-        beginCheck(scope, books.length);
+        setCheckScope(scope, books.length);
         if (scope === "page") { books.forEach(setupItemStatus); }
 
         for (const book of books)
@@ -199,7 +177,7 @@ export function useCheckActions(): CheckActions
                     }, new Map<StatusType, Book[]>());
 
                     resolve(booksByStatus);
-                    endCheck();
+                    resetCheckStates();
                 },
                 { once: true });
         });
@@ -241,19 +219,19 @@ export function useCheckActions(): CheckActions
                     <button class="primary">{LL.modals.actions.saveReport()}</button>
                     <button onClick={() => closeModal(id)}>{LL.modals.actions.gotIt()}</button>
                 </>,
-                onClose: endCheck,
+                onClose: resetCheckStates,
             });
     }
 
     async function checkSingleBook(book: Book): Promise<void>
     {
         if (isChecking/*  && (scope !== "single") */) { return; }
-        beginCheck("single", 1);
+        setCheckScope("single", 1);
 
         setupItemStatus(book);
         await checkUpdate(book, "single");
 
-        endCheck();
+        resetCheckStates();
     }
 
     async function checkWholePage(): Promise<void>
@@ -329,7 +307,7 @@ export function useCheckActions(): CheckActions
         });
 
         if (!continueCheck) { return; }
-        beginCheck("library");
+        setCheckScope("library");
 
         let bypassReloading: boolean = false;
         if (isFetched)
@@ -369,12 +347,11 @@ export function useCheckActions(): CheckActions
         const results = await runBatchCheck(getFetchedBooks(), "library");
         closeModal(id);
 
-        setController(new AbortController());
+        setAbortController(new AbortController());
         showResultModal(results, "library");
     }
 
     return {
-        checkStates,
         checkSingleBook,
         checkWholePage,
         checkWholeLibrary,

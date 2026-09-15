@@ -1,8 +1,8 @@
 import type { ComponentChildren } from "preact";
 import { createPortal, useEffect, useRef } from "preact/compat";
 
+import { closeModal, useModals, type Modal } from "./hooks/modals";
 import { setupOverlayContainer } from "./root";
-import { useGlobals, type Modal } from "./hooks/globals";
 import classes from "./modal-host.module.scss";
 
 interface DialogProps
@@ -75,7 +75,7 @@ function Dialog(props: DialogProps): ComponentChildren
  */
 export function ModalHost(): ComponentChildren
 {
-    const { modals, closeModal } = useGlobals();
+    const modals = useModals();
     if (modals.length === 0) { return null; }
 
     return createPortal(

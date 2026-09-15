@@ -4,10 +4,11 @@ import clsx from "clsx";
 import { BOOK_ACTIONS_LIST, LIBRARY_BOOKS } from "../core/selectors";
 import { getBookFromElement, type Book } from "../core/books";
 import { LL } from "../locales";
+
 import { useCheckActions } from "./hooks/check-actions";
+import { useCheckStates } from "./hooks/check-states";
 
 import classes from "./library-action.module.scss";
-
 interface LibraryActionsProps
 {
     book: Book;
@@ -15,8 +16,8 @@ interface LibraryActionsProps
 
 function LibraryActions({ book }: LibraryActionsProps): ComponentChildren
 {
-    const { checkStates, checkSingleBook } = useCheckActions();
-    const { isChecking, scope } = checkStates;
+    const { isChecking } = useCheckStates();
+    const { checkSingleBook } = useCheckActions();
 
     return (
         <li class="library-actions-list-item">

@@ -1,20 +1,9 @@
 
 import { useSyncExternalStore } from "preact/compat";
 
-export interface AbortControllerStore
-{
-    controller: AbortController;
-    setController(controller: AbortController): void;
-}
-
 let controller: AbortController = new AbortController;
 
 const listeners = new Set<() => void>();
-
-function getSnapshot(): AbortController
-{
-	return controller;
-}
 
 function subscribe(listener: () => void): () => void
 {
@@ -22,20 +11,24 @@ function subscribe(listener: () => void): () => void
 	return () => listeners.delete(listener);
 }
 
-function setController(nextController: AbortController): void
+function getSnapshot(): AbortController
 {
-	controller = nextController;
-
-	for (const listener of listeners)
-	{
-		listener();
-	}
+	return controller;
 }
 
-export function useAbortController(): AbortControllerStore
+function emit(): void
 {
-	return {
-		controller: useSyncExternalStore(subscribe, getSnapshot),
-		setController,
-	};
+	for (const listener of listeners) { listener(); }
+}
+
+export function useAbortController(): AbortController
+{
+    const controller = useSyncExternalStore(subscribe, getSnapshot);
+	return controller;
+}
+
+export function setAbortController(nextController: AbortController): void
+{
+	controller = nextController;
+    emit();
 }
