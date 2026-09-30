@@ -23,7 +23,7 @@ const zh_TW: Translation = {
         titles: {
             message: "訊息",
             warning: "警告",
-            checkingInProgress: "檢查中……",
+            checkingInProgress: "檢查中",
             checkCompleted: "檢查完成",
         },
         contents: {
@@ -32,7 +32,7 @@ const zh_TW: Translation = {
             fetchLibrary: "檢索書庫",
             fetchLibraryProgress: "{fetchedPages}／{totalPages} 頁",
             checkUpdate: "檢查更新",
-            checkUpdateProgress: "{checkedBooks}／{totalBooks} 本書",
+            checkUpdateProgress: "{checkedBooks}／{totalBooks} 本",
             finishCheckingPage: "完成檢查本頁。共檢查了 {0} 本圖書。",
             finishCheckingLibrary: "完成檢查書庫。共檢查了 {0} 本圖書。",
             statusSummaries: {

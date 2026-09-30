@@ -24,7 +24,7 @@ const en_US: BaseTranslation = {
         titles: {
             message: "Message",
             warning: "Warning",
-            checkingInProgress: "Checking in Progress...",
+            checkingInProgress: "Checking in Progress",
             checkCompleted: "Check Completed",
         },
         contents: {
