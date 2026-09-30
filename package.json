@@ -40,5 +40,14 @@
     "vite": "^8.2.2",
     "vite-plugin-monkey": "^8.1.1",
     "vitest": "^5.0.0"
-  }
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "onFail": "error",
+      "version": "12.x"
+    }
+  },
+  "private": true,
+  "type": "module"
 }
