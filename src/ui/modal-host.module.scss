@@ -1,0 +1,146 @@
+:root
+{
+    --update-checker--primary-color: #bf0000;
+    --update-checker--secondary-color: #595959;
+}
+
+html:has(.dialog[open])
+{
+    overflow: clip;
+}
+
+.dialog
+{
+    box-sizing: border-box;
+    display: flex;
+    border: none;
+    padding: 5rem 2rem 2rem;
+    flex-direction: column;
+    align-items: center;
+    scrollbar-width: thin;
+    overscroll-behavior: contain;
+    color: #595959;
+    line-height: 1.8rem;
+    font-size: 1.4rem;
+    font-family: Georgia, Times, times, serif;
+
+    &::backdrop
+    {
+        overflow: hidden;
+        overscroll-behavior: contain;
+        background-color: rgba(0,0,0,.65);
+    }
+
+    @media (max-width: 568px)
+    {
+        width: auto;
+        max-width: 43rem;
+    }
+
+    .close
+    {
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 3.5rem;
+        height: 3.5rem;
+        margin: 16px;
+        border: 0;
+        padding: 0 15px;
+        min-height: 35px;
+        background-image: url(../assets/close.svg);
+        background-size: 1.5rem 1.5rem;
+        background-position: center;
+        background-repeat: no-repeat;
+        transition: background-color .2s, color .2s;
+
+        &:is(:hover, :focus, :active)
+        {
+            background-image: url(../assets/close-active.svg);
+            background-color: var(--update-checker--secondary-color);
+        }
+    }
+
+    header h2
+    {
+        margin: 0 0 2rem;
+        padding: 0;
+        color: #0d0d0d;
+        text-align: center;
+        line-height: 2.2rem;
+        font-size: 2.2rem;
+        /* font-family: "Trebuchet MS", Trebuchet, Arial, Helvetica, sans-serif; */
+        font-family: "Rakuten Sans UI", "Trebuchet MS", Trebuchet, Arial, Helvetica, sans-serif;
+        font-style: normal;
+
+        @media (max-width: 568px)
+        {
+            margin-bottom: 1.5rem;
+            line-height: 1.6rem;
+            font-size: 1.6rem;
+        }
+    }
+
+    footer
+    {
+        display: flex;
+        margin: 3rem auto 0;
+        width: auto;
+        flex-direction: row-reverse;
+        justify-content: center;
+        gap: 1rem;
+
+        @media (max-width: 568px)
+        {
+            width: 100%;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        button
+        {
+            display: inline-block;
+            border-width: 3px;
+            border-style: solid;
+            border-color: var(--update-checker--secondary-color);
+            border-radius: 0;
+            padding: 0 15px;
+            box-sizing: border-box;
+            min-height: 35px;
+            min-width: 70px;
+            color: #fff;
+            background: #000;
+            background-color: var(--update-checker--secondary-color);
+            text-align: center;
+            font-size: 1.4rem;
+            /* font-family: "Trebuchet MS", Trebuchet, Arial, Helvetica, sans-serif; */
+            font-family: "Rakuten Sans UI", "Trebuchet MS", Trebuchet, Arial, Helvetica, sans-serif;
+            font-style: normal;
+            font-weight: 700;
+            outline: 0;
+            cursor: pointer;
+            transition: background-color .2s, color .2s;
+
+            &:is(:hover, :focus, :active)
+            {
+                color: var(--update-checker--secondary-color);
+                background-color: #fff;
+            }
+
+            &:global(.primary)
+            {
+                border-color: var(--update-checker--primary-color);
+                padding: 0 15px;
+                color: #fff;
+                background-color: var(--update-checker--primary-color);
+
+                &:is(:hover, :focus, :active)
+                {
+                    color: var(--update-checker--primary-color);
+                    background-color: #fff;
+                }
+            }
+        }
+    }
+}

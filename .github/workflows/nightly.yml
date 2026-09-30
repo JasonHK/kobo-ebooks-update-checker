@@ -32,11 +32,13 @@ jobs:
       - name: Upload nightly artifact (*.meta.js)
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          path: dist/*.meta.js
+          path: ./dist/*.meta.js
+          archive: false
           if-no-files-found: error
 
       - name: Upload nightly artifact (*.user.js)
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          path: dist/*.user.js
+          path: ./dist/*.user.js
+          archive: false
           if-no-files-found: error
