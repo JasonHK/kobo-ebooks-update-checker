@@ -2,6 +2,8 @@ import { ZodError } from "zod";
 import { z } from "zod/mini";
 import { NetworkError, ParsingError, UnlistedError } from "./errors";
 
+const NEXT_PUSH_PATTERN = /self\.__next_f\.push\(\s*\[\s*1\s*,\s*("(?:\\.|[^"\\])*")\s*\]\s*\)/g;
+
 type GizmoConfig = z.infer<typeof GizmoConfig>;
 const GizmoConfig = z.object(
 {
@@ -53,20 +55,75 @@ export async function fetchProductFromUrl(url: string, signal?: AbortSignal): Pr
 function getProductFromDocument(document: Document): Product
 {
     const detail = document.querySelector(".item-detail");
-    if (!(detail instanceof HTMLElement)) { throw new ParsingError("Item detail element not found."); }
-
-    try
+    if (detail instanceof HTMLElement)
     {
-        const { productId, productType } = GizmoConfig.parse(JSON.parse(detail.dataset.koboGizmoConfig!));
-        return { productId, productType };
-    }
-    catch (error: unknown)
-    {
-        if ((error instanceof SyntaxError) || (error instanceof ZodError))
+        try
         {
-            throw new ParsingError("Malformed Kobo Gizmo config", { cause: error });
+            const { productId, productType } = GizmoConfig.parse(JSON.parse(detail.dataset.koboGizmoConfig!));
+            return { productId, productType };
         }
+        catch (error: unknown)
+        {
+            if ((error instanceof SyntaxError) || (error instanceof ZodError))
+            {
+                throw new ParsingError("Malformed Kobo Gizmo config", { cause: error });
+            }
 
-        throw error;
+            throw error;
+        }
     }
+    
+    const chunks: string[] = [];
+    for (const script of document.scripts)
+    {
+        for (const match of script.textContent.matchAll(NEXT_PUSH_PATTERN))
+        {
+            chunks.push(JSON.parse(match[1]));
+        }
+    }
+
+    for (const row of chunks.join("").split("\n"))
+    {
+        const separatorIndex = row.indexOf(":");
+        if (separatorIndex < 1) { continue; }
+
+        try
+        {
+            const data = JSON.parse(row.slice(separatorIndex + 1));
+            const itemDetails = findItemDetails(data);
+            if (itemDetails)
+            {
+                const { productId, productType } = GizmoConfig.parse(itemDetails);
+                return { productId, productType };
+            }
+        }
+        catch (error: unknown)
+        {
+            if (error instanceof ZodError)
+            {
+                throw new ParsingError("Malformed Kobo Gizmo config", { cause: error });
+            }
+        }
+    }
+
+    throw new ParsingError("Item detail element not found.");
+}
+
+function findItemDetails(value: unknown): object | null
+{
+    if (!value || (typeof value !== "object")) { return null; }
+    if (Reflect.has(value, "itemDetails"))
+    {
+        const itemDetails: unknown = Reflect.get(value, "itemDetails");
+        if (!itemDetails || (typeof itemDetails !== "object")) { return null; }
+        return itemDetails;
+    }
+
+    for (const child of Object.values(value))
+    {
+        const result = findItemDetails(child);
+        if (result) { return result; }
+    }
+
+    return null;
 }
