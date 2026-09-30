@@ -2,6 +2,9 @@ import { ZodError } from "zod";
 import { z } from "zod/mini";
 import { NetworkError, ParsingError, UnlistedError } from "./errors";
 
+/**
+ * The regular expression pattern used to match the `__next_f.push` calls in the HTML scripts.
+ */
 const NEXT_PUSH_PATTERN = /self\.__next_f\.push\(\s*\[\s*1\s*,\s*("(?:\\.|[^"\\])*")\s*\]\s*\)/g;
 
 type GizmoConfig = z.infer<typeof GizmoConfig>;
@@ -106,9 +109,13 @@ function getProductFromDocument(document: Document): Product
         }
     }
 
-    throw new ParsingError("Item detail element not found.");
-}
 
+/**
+ * Recursively searches for an "itemDetails" object within the given value.
+ * 
+ * @param value The value to search for item details.
+ * @returns The item details object if found, otherwise `null`.
+ */
 function findItemDetails(value: unknown): object | null
 {
     if (!value || (typeof value !== "object")) { return null; }

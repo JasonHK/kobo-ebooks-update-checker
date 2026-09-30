@@ -65,6 +65,12 @@ export function getBookFromElement(element: Element): Book
     }
 }
 
+/**
+ * Determines if a library element represents a preview book.
+ * 
+ * @param element The library element to check.
+ * @returns `true` if the element represents a preview book, `false` otherwise.
+ */
 function isPreview(element: Element): boolean
 {
     return ((element instanceof HTMLElement) && (element.dataset.koboGizmo === "PreviewLibraryItem"));
