@@ -17,7 +17,7 @@
     "url": "git+https://github.com/JasonHK/kobo-ebooks-update-checker.git"
   },
   "scripts": {
-    "build": "$npm_execpath run locales -- --no-watch && tsc && vite build",
+    "build": "pnpm run locales --no-watch && tsc && vite build",
     "dev": "vite",
     "locales": "typesafe-i18n",
     "preview": "vite preview"
