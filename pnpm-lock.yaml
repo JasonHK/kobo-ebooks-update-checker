@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@dipscope/type-manager':
-        specifier: ^8.3.0
-        version: 8.3.0
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -20,9 +17,6 @@ importers:
       preact-render-to-string:
         specifier: ^6.7.0
         version: 6.7.0(preact@10.29.8)
-      preact-root-fragment:
-        specifier: ^0.3.1
-        version: 0.3.1(preact@10.29.8)
       queue:
         specifier: ^7.0.0
         version: 7.0.0
@@ -206,9 +200,6 @@ packages:
   '@csstools/css-tokenizer@4.0.2':
     resolution: {integrity: sha512-OoKoR0f76dCY666JlcbhmVTs2drYj1GUXZTYTcbUgJjh9Nv41aFfZ21bPQTERm5+L5cBDo466NltB2lplS5GBw==}
     engines: {node: '>=20.19.0'}
-
-  '@dipscope/type-manager@8.3.0':
-    resolution: {integrity: sha512-sWOxNdJpFFzb13K1umTEuI4KFzQQ863oD6HdcLe+cmN6psA/GfIkEG2BPr8rKRozDoZJKvbOprYpig0jrefxgw==}
 
   '@exodus/bytes@1.16.0':
     resolution: {integrity: sha512-IcpW84uEn3N7ETtNZMlxKhfl6Pec8rUNGOTBtWbK1FKhJxIFAptZyVrvVRVBimAJxJCgc3PxepxkdWWG4DVzfA==}
@@ -1079,11 +1070,6 @@ packages:
     peerDependencies:
       preact: '>=10 || >= 11.0.0-0'
 
-  preact-root-fragment@0.3.1:
-    resolution: {integrity: sha512-Kva0DYwT5U4D54NSp7WzuyWMtIAlqDyZlM+LWKm7z4bO47K8+tOUPn1Ord2qfyETw0Erq109IF7O3ZzUv0kx6A==}
-    peerDependencies:
-      preact: 10.x || 11.x
-
   preact@10.29.8:
     resolution: {integrity: sha512-ej2aVZ+vZ8WO7tvlQWRM9N63A0KzF9q4mWJfDUHgYaIofWY9hu74QdnQrjoPMmZi2/nZ5gN0bJCQF49xQqx09Q==}
     peerDependencies:
@@ -1677,8 +1663,6 @@ snapshots:
       css-tree: 3.2.1
 
   '@csstools/css-tokenizer@4.0.2': {}
-
-  '@dipscope/type-manager@8.3.0': {}
 
   '@exodus/bytes@1.16.0': {}
 
@@ -2348,10 +2332,6 @@ snapshots:
   powershell-utils@0.2.1: {}
 
   preact-render-to-string@6.7.0(preact@10.29.8):
-    dependencies:
-      preact: 10.29.8(preact-render-to-string@6.7.0)
-
-  preact-root-fragment@0.3.1(preact@10.29.8):
     dependencies:
       preact: 10.29.8(preact-render-to-string@6.7.0)
 
