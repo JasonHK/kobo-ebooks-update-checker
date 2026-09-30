@@ -1,6 +1,18 @@
 import { defineConfig } from "vite";
 import preact from "@preact/preset-vite";
 import monkey, { cdn } from "vite-plugin-monkey";
+import { createRequire } from "node:module";
+
+const require = createRequire(import.meta.url);
+const preactVersion: string = require("preact/package.json").version;
+
+function preactCdn(exportVarName: string, pathname: string): ReturnType<typeof cdn.unpkg>
+{
+    return [
+        exportVarName,
+        () => `https://unpkg.com/preact@${preactVersion}/${pathname}`,
+    ];
+}
 
 export default defineConfig(
     {
@@ -36,7 +48,11 @@ export default defineConfig(
                     build: {
                         metaFileName: true,
                         externalGlobals: {
+                            "clsx": cdn.unpkg("clsx", "dist/clsx.min.js"),
                             "preact": cdn.unpkg("preact", "dist/preact.min.umd.js"),
+                            "preact/hooks": preactCdn("preactHooks", "hooks/dist/hooks.umd.js"),
+                            // "preact/hooks": cdn.unpkg("preactHooks", "hooks/dist/hooks.umd.js"),
+                            "preact-render-to-string": cdn.unpkg("preactRenderToString", "dist/index.umd.js"),
                             "typesafe-i18n": cdn.unpkg("typesafeI18n", "dist/i18n.all.min.js"),
                         },
                     },
