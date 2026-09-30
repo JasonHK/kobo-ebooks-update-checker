@@ -36,6 +36,10 @@ const zh_TW: Translation = {
             finishCheckingPage: "完成檢查本頁。共檢查了 {0} 本圖書。",
             finishCheckingLibrary: "完成檢查書庫。共檢查了 {0} 本圖書。",
             statusSummaries: {
+                // Unused, kept for typing purposes.
+                pending: "等待中：{0} 本",
+                checking: "檢查中：{0} 本",
+
                 latest: "最新：{0} 本",
                 outdated: "有更新：{0} 本",
                 preview: "預覽：{0} 本",
@@ -50,6 +54,21 @@ const zh_TW: Translation = {
             saveReport: "儲存報告",
             gotIt: "了解",
             cancel: "取消",
+        },
+    },
+    report: {
+        title: "Kobo 電子書更新報告",
+        summary: "報告建立於 {timestamp|date} {timestamp|time}，共檢查 {totalChecked} 本書。",
+        sections: {
+            // Unused, kept for typing purposes.
+            pending: "等待中（{0} 本）",
+            checking: "檢查中（{0} 本）",
+
+            latest: "最新（{0} 本）",
+            outdated: "有更新（{0} 本）",
+            preview: "預覽（{0} 本）",
+            skipped: "已略過（{0} 本）",
+            failed: "檢查失敗（{0} 本）",
         },
     },
     error: {

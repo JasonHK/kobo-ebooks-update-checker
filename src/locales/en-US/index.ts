@@ -1,3 +1,4 @@
+import type { StatusType } from "../../ui/hooks/book-statuses";
 import { type BaseTranslation } from "../i18n-types";
 
 const en_US: BaseTranslation = {
@@ -18,7 +19,7 @@ const en_US: BaseTranslation = {
         preview: "Preview",
         skipped: "Skipped",
         failed: "Failed",
-    },
+    } satisfies Record<StatusType, string>,
     modals: {
         titles: {
             message: "Message",
@@ -36,12 +37,16 @@ const en_US: BaseTranslation = {
             finishCheckingPage: "Finished checking the page. Checked {0:number} title{{s}} in total.",
             finishCheckingLibrary: "Finished checking the library. Checked {0:number} title{{s}} in total.",
             statusSummaries: {
+                // Unused, kept for typing purposes.
+                pending: "Pending: {0: number} Title{{s}}",
+                checking: "Checking: {0: number} Title{{s}}",
+                
                 latest: "Latest: {0: number} Title{{s}}",
                 outdated: "Outdated: {0: number} Title{{s}}",
                 preview: "Preview: {0: number} Title{{s}}",
                 skipped: "Skipped: {0: number} Title{{s}}",
                 failed: "Failed: {0: number} Title{{s}}",
-            },
+            } satisfies Record<StatusType, string>,
         },
         actions: {
             startChecking: "Start Checking",
@@ -51,6 +56,21 @@ const en_US: BaseTranslation = {
             gotIt: "Got It",
             cancel: "Cancel",
         },
+    },
+    report: {
+        title: "Kobo e-Books Update Report",
+        summary: "Report created on {timestamp:number|date} {timestamp:number|time}, with {totalChecked:number} title{{totalChecked:s}} checked in total.",
+        sections: {
+            // Unused, kept for typing purposes.
+            pending: "Pending ({0:number} Title{{s}})",
+            checking: "Checking ({0:number} Title{{s}})",
+
+            latest: "Latest ({0:number} Title{{s}})",
+            outdated: "Outdated ({0:number} Title{{s}})",
+            preview: "Preview ({0:number} Title{{s}})",
+            skipped: "Skipped ({0:number} Title{{s}})",
+            failed: "Failed ({0:number} Title{{s}})",
+        } satisfies Record<StatusType, string>,
     },
     error: {
         unlisted: "This book was unlisted, there’s no way to check update for this type of books at the moment.",

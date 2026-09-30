@@ -11,6 +11,7 @@ import { LL } from "../../locales";
 
 import { setupItemStatus } from "../item-status";
 import { Progress } from "../progress";
+import { exportReport } from "../report";
 
 import { openModal, closeModal } from "./modals";
 import { setAbortController, useAbortController } from "./abort-controller";
@@ -36,7 +37,7 @@ const CACHED_STATUSES = new Set<StatusType>(
     "preview",
 ]);
 
-const SUMMARY_STATUSES: Exclude<StatusType, "pending" | "checking">[] = [
+const SUMMARY_ORDER: StatusType[] = [
     "latest",
     "outdated",
     "preview",
@@ -199,7 +200,7 @@ export function useCheckActions(): CheckActions
                     <p class={classes.message}>
                         {(scope === "page") ? LL.modals.contents.finishCheckingPage(totalChecked) : LL.modals.contents.finishCheckingLibrary(totalChecked)}
                     </p>
-                    {SUMMARY_STATUSES.map((status) =>
+                    {SUMMARY_ORDER.map((status) =>
                     {
                         const books = results.get(status);
                         if (!books || (books.length === 0)) { return null; }
@@ -216,7 +217,7 @@ export function useCheckActions(): CheckActions
                 </>,
                 actions: 
                 <>
-                    <button class="primary">{LL.modals.actions.saveReport()}</button>
+                    <button class="primary" onClick={() => exportReport({ results, totalChecked })}>{LL.modals.actions.saveReport()}</button>
                     <button onClick={() => closeModal(id)}>{LL.modals.actions.gotIt()}</button>
                 </>,
                 onClose: resetCheckStates,
