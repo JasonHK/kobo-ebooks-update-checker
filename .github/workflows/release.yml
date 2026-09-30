@@ -11,35 +11,46 @@ permissions:
   pull-requests: write
 
 jobs:
-  release:
-    name: Release
+  release_please:
     runs-on: ubuntu-latest
     outputs:
       releases_created: ${{ steps.release_please.outputs.releases_created }}
       tag_name: ${{ steps.release_please.outputs.tag_name }}
     steps:
       - id: release_please
-        uses: googleapis/release-please-action@v4
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7
 
-  build-released:
-    name: Build and Publish Released
-    needs: release
-    if: needs.release.outputs.releases_created == 'true'
+  release:
+    needs: release_please
+    if: needs.release_please.outputs.releases_created == 'true'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - name: Check out release tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ needs.release_please.outputs.tag_name }}
+
+      - name: Setup pnpm
+        uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: 24.x
-      - run: npm ci --workspaces --include-workspace-root
+
+      - name: Install dependencies
+        run: pnpm ci
 
       - name: Build UserScript
         run: npm run build
 
       - name: Upload to GitHub Releases
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64
         with:
-          tag_name: ${{ needs.release.outputs.tag_name }}
+          tag_name: ${{ needs.release_please.outputs.tag_name }}
           fail_on_unmatched_files: true
           files: |
+            ./dist/*.meta.js
             ./dist/*.user.js

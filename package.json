@@ -1,28 +1,26 @@
 {
   "name": "kobo-ebooks-update-checker",
   "version": "1.8.0",
-  "private": true,
   "description": "Checks if updates were available for the e-books you own.",
   "homepage": "https://github.com/JasonHK/kobo-ebooks-update-checker#readme",
   "bugs": {
     "url": "https://github.com/JasonHK/kobo-ebooks-update-checker/issues"
   },
+  "license": "MIT",
+  "author": {
+    "email": "userscripts@jasonhk.dev",
+    "name": "Jason Kwok"
+  },
+  "main": "kobo-update-checker.user.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JasonHK/kobo-ebooks-update-checker.git"
   },
-  "license": "MIT",
-  "author": {
-    "name": "Jason Kwok",
-    "email": "userscripts@jasonhk.dev"
-  },
-  "type": "module",
-  "main": "kobo-update-checker.user.js",
   "scripts": {
-    "build": "$npm_execpath run locales -- --no-watch && tsc && vite build",
+    "build": "pnpm run locales --no-watch && tsc && vite build",
     "dev": "vite",
-    "preview": "vite preview",
-    "locales": "typesafe-i18n"
+    "locales": "typesafe-i18n",
+    "preview": "vite preview"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -40,5 +38,14 @@
     "typescript": "^6.0.3",
     "vite": "^7.3.2",
     "vite-plugin-monkey": "^7.1.9"
-  }
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "onFail": "error",
+      "version": "12.x"
+    }
+  },
+  "private": true,
+  "type": "module"
 }
