@@ -25,15 +25,14 @@ const GizmoConfig = z.object(
 /**
  * Represents a book in the library.
  */
-export type Book = z.infer<typeof Book>
-export const Book = z.extend(z.omit(GizmoConfig, { imageUrl: true }),
+export interface Book extends Omit<GizmoConfig, "imageUrl">
 {
     /** The URL of the book's store page. */
-    storeUrl: z.url(),
+    storeUrl: string;
 
     /** Indicates if the book is a preview. */
-    isPreview: z.boolean(),
-});
+    isPreview: boolean;
+}
 
 /**
  * Gets a book from a library element.

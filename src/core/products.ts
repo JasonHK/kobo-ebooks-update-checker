@@ -7,8 +7,8 @@ import { NetworkError, ParsingError, UnlistedError } from "./errors";
  */
 const NEXT_PUSH_PATTERN = /self\.__next_f\.push\(\s*\[\s*1\s*,\s*("(?:\\.|[^"\\])*")\s*\]\s*\)/g;
 
-type GizmoConfig = z.infer<typeof GizmoConfig>;
-const GizmoConfig = z.object(
+type GizmoConfigOrItemDetails = z.infer<typeof GizmoConfigOrItemDetails>;
+const GizmoConfigOrItemDetails = z.object(
 {
     /** The unique identifier for the product. */
     productId: z.uuid(),
@@ -20,8 +20,7 @@ const GizmoConfig = z.object(
 /**
  * Represents a product in the Kobo store.
  */
-export type Product = z.infer<typeof Product>;
-export const Product = GizmoConfig;
+export type Product = GizmoConfigOrItemDetails;
 
 /**
  * Fetches a product from a given URL.
@@ -62,7 +61,7 @@ function getProductFromDocument(document: Document): Product
     {
         try
         {
-            const { productId, productType } = GizmoConfig.parse(JSON.parse(detail.dataset.koboGizmoConfig!));
+            const { productId, productType } = GizmoConfigOrItemDetails.parse(JSON.parse(detail.dataset.koboGizmoConfig!));
             return { productId, productType };
         }
         catch (error: unknown)
@@ -96,19 +95,24 @@ function getProductFromDocument(document: Document): Product
             const itemDetails = findItemDetails(data);
             if (itemDetails)
             {
-                const { productId, productType } = GizmoConfig.parse(itemDetails);
+                const { productId, productType } = GizmoConfigOrItemDetails.parse(itemDetails);
                 return { productId, productType };
             }
         }
         catch (error: unknown)
         {
+            // Ignore syntax errors and continue parsing the next row.
+            if (error instanceof SyntaxError) { continue; }
+
             if (error instanceof ZodError)
             {
-                throw new ParsingError("Malformed Kobo Gizmo config", { cause: error });
+                throw new ParsingError("Malformed item details received from hydrated data", { cause: error });
             }
         }
     }
 
+    throw new ParsingError("Product details not found.");
+}
 
 /**
  * Recursively searches for an "itemDetails" object within the given value.
