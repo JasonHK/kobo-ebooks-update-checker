@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.0.0](https://github.com/JasonHK/kobo-ebooks-update-checker/compare/v1.8.0...v2.0.0) (2026-09-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* switch license to GPL-3.0 ([#3](https://github.com/JasonHK/kobo-ebooks-update-checker/issues/3))
+
+### Features
+
+* add bypass reloading to library on second run ([e5cbede](https://github.com/JasonHK/kobo-ebooks-update-checker/commit/e5cbede966fca03b10c918fe831e2fde914d657c))
+* add full library update checking ([e5cbede](https://github.com/JasonHK/kobo-ebooks-update-checker/commit/e5cbede966fca03b10c918fe831e2fde914d657c))
+
+
+### Bug Fixes
+
+* unable to check update on worldwide store ([e5cbede](https://github.com/JasonHK/kobo-ebooks-update-checker/commit/e5cbede966fca03b10c918fe831e2fde914d657c))
+
+
+### Miscellaneous Chores
+
+* switch license to GPL-3.0 ([#3](https://github.com/JasonHK/kobo-ebooks-update-checker/issues/3)) ([1a4c225](https://github.com/JasonHK/kobo-ebooks-update-checker/commit/1a4c2256bd36ab9cbfd5f882bf481ae429dd6e2f))
+
 ## 1.8.0 (2025-09-26)
 
 
