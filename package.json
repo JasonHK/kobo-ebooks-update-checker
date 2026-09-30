@@ -19,7 +19,7 @@
   "type": "module",
   "main": "kobo-update-checker.user.js",
   "scripts": {
-    "build": "$npm_execpath run locales -- --no-watch && tsc && vite build",
+    "build": "pnpm run locales --no-watch && tsc && vite build",
     "dev": "vite",
     "preview": "vite preview",
     "locales": "typesafe-i18n"
@@ -28,6 +28,7 @@
     "@dipscope/type-manager": "^8.3.0",
     "clsx": "^2.1.1",
     "preact": "^10.29.1",
+    "preact-render-to-string": "^6.7.0",
     "preact-root-fragment": "^0.3.1",
     "queue": "^7.0.0",
     "typesafe-i18n": "^5.27.1",
@@ -37,9 +38,11 @@
     "@preact/preset-vite": "^2.10.5",
     "@tsconfig/recommended": "^1.0.13",
     "@types/node": "^25.6.0",
+    "jsdom": "^30.0.1",
     "sass-embedded": "^1.99.0",
     "typescript": "^6.0.3",
     "vite": "^8.2.2",
-    "vite-plugin-monkey": "^8.1.1"
+    "vite-plugin-monkey": "^8.1.1",
+    "vitest": "^5.0.0"
   }
 }
