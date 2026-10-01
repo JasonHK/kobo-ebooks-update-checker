@@ -45,6 +45,7 @@ const REPORT_ORDER: StatusType[] = [
     "latest",
     "outdated",
     "preview",
+    "preOrder",
     "skipped",
     "failed",
 ];
