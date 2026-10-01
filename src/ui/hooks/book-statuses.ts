@@ -5,6 +5,7 @@ export type StatusType =
     | "checking"
     | "latest"
     | "outdated"
+    | "preOrder"
     | "preview"
     | "skipped"
     | "failed";

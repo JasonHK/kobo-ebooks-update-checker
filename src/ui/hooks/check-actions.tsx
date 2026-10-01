@@ -35,12 +35,14 @@ const CACHED_STATUSES = new Set<StatusType>(
     "latest",
     "outdated",
     "preview",
+    "preOrder",
 ]);
 
 const SUMMARY_ORDER: StatusType[] = [
     "latest",
     "outdated",
     "preview",
+    "preOrder",
     "skipped",
     "failed",
 ];
@@ -87,9 +89,9 @@ export function useCheckActions(): CheckActions
             return;
         }
 
-        if (book.isPreview)
+        if (book.isPreOrder || book.isPreview)
         {
-            setBookStatusById(book.id, { type: "preview" });
+            setBookStatusById(book.id, { type: book.isPreOrder ? "preOrder" : "preview" });
             incrementCheckedBooks();
             return;
         }

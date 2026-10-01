@@ -1,6 +1,7 @@
 export const SECONDARY_CONTROLS_GRID = ".secondary-controls";
 export const LIBRARY_BOOKS = ".item-wrapper.book";
 export const BOOK_ACTIONS_LIST = ".library-actions-list";
+export const COVER_IMAGE = "img.cover-image";
 
 export const LIBRARY_PAGINATION = ".pagination";
 export const LIBRARY_FIRST_PAGE = `${LIBRARY_PAGINATION} .page-link.first`;
