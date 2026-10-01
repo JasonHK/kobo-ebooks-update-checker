@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/JasonHK/kobo-ebooks-update-checker/compare/v2.0.0...v2.0.1) (2026-10-01)
+
+
+### Bug Fixes
+
+* **report:** report not saved in some cases ([#9](https://github.com/JasonHK/kobo-ebooks-update-checker/issues/9)) ([9d9ebe4](https://github.com/JasonHK/kobo-ebooks-update-checker/commit/9d9ebe4300d005c00795f40952ea7c41a5699940))
+
 ## [2.0.0](https://github.com/JasonHK/kobo-ebooks-update-checker/compare/v1.8.0...v2.0.0) (2026-09-30)
 
 
