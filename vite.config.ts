@@ -24,10 +24,12 @@ export default defineConfig(
                     userscript: {
                         "name": {
                             "": "Kobo e-Books Update Checker",
+                            "ja": "Kobo 電子書籍更新チェッカー",
                             "zh-TW": "Kobo 電子書更新檢查器",
                         },
                         "description": {
                             "": "Checks if updates were available for the e-books you own.",
+                            "ja": "所有している電子書籍に更新があるかを確認します。",
                             "zh-TW": "檢查你購買的電子書是否有更新檔提供。",
                         },
                         "icon": "https://icons.duckduckgo.com/ip3/www.kobo.com.ico",
@@ -41,9 +43,6 @@ export default defineConfig(
                             "https://www.kobo.com/*/*/library/archive?*",
                         ],
                         "run-at": "document-end",
-                        "grant": [
-                            "GM.setClipboard",
-                        ],
                     },
                     build: {
                         metaFileName: true,
