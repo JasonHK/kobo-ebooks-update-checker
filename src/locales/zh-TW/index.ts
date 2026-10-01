@@ -23,6 +23,7 @@ const zh_TW: Translation = {
         titles: {
             message: "訊息",
             warning: "警告",
+            error: "錯誤",
             checkingInProgress: "檢查中",
             checkCompleted: "檢查完成",
         },
@@ -46,6 +47,8 @@ const zh_TW: Translation = {
                 skipped: "已略過：{0} 本",
                 failed: "檢查失敗：{0} 本",
             },
+            downloadErrorDetails: "錯誤詳細資訊：{0}",
+            reportOpenedInTab: "報告已改為在新分頁中開啟。",
         },
         actions: {
             startChecking: "開始檢查",
@@ -75,6 +78,13 @@ const zh_TW: Translation = {
         unlisted: "該書已下架，目前尚未有方法為這類書籍檢查更新。",
         parsing: "無法解析最新的產品編號，請聯絡開發者以進一步調查。",
         unknown: "未知錯誤，請聯絡開發者以進一步調查。",
+        download: {
+            not_enabled: "尚未啟用下載功能。請在 UserScript 管理器的設定中啟用。",
+            not_whitelisted: "檔案副檔名不在白名單中。請將 .html 副檔名加入 UserScript 管理器的白名單。",
+            not_permitted: "尚未授予下載權限。請授予 UserScript 管理器相關權限。",
+            not_supported: "瀏覽器或 UserScript 管理器不支援下載功能。",
+            not_succeeded: "檔案下載失敗。",
+        },
     },
 };
 
