@@ -66,7 +66,7 @@ export function getBookFromElement(element: Element): Book
 
             return {
                 ...info,
-                id: crypto.randomUUID(),
+                id: info.productId,
                 author: "",
                 storeUrl,
                 isPreOrder,
@@ -183,9 +183,7 @@ export function getBooksFromDocument(document: Document = window.document): Book
  */
 export function getElementByBook(book: Book): Element | null
 {
-    const { id, productId, isPreOrder } = book;
+    const { id } = book;
 
-    return isPreOrder
-        ? document.querySelector(`${LIBRARY_BOOKS}[data-track-info*="${CSS.escape(productId)}"]`)
-        : document.querySelector(`${LIBRARY_BOOKS}[data-track-info*="${CSS.escape(id)}"]`);
+    return document.querySelector(`${LIBRARY_BOOKS}[data-track-info*="${CSS.escape(id)}"]`);
 }
