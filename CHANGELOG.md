@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.2](https://github.com/JasonHK/kobo-ebooks-update-checker/compare/v2.0.1...v2.0.2) (2026-10-01)
+
+
+### Bug Fixes
+
+* **core:** pre-order books broke the script ([#11](https://github.com/JasonHK/kobo-ebooks-update-checker/issues/11)) ([6d555b4](https://github.com/JasonHK/kobo-ebooks-update-checker/commit/6d555b4c179703d06e1c6483eddf94a35aa1da9f))
+
 ## [2.0.1](https://github.com/JasonHK/kobo-ebooks-update-checker/compare/v2.0.0...v2.0.1) (2026-10-01)
 
 
