@@ -1,11 +1,11 @@
 import type { ComponentChildren } from "preact";
 import { useId } from "preact/hooks";
-import Queue from "queue";
 
 import { getBooksFromDocument, type Book } from "../../core/books";
 import { fetchPageFromUrl, getPageFromDocument } from "../../core/pages";
+import { checkUpdate, runBatchCheck, type CheckResults } from "../../core/checker";
 import { LIBRARY_PAGINATION } from "../../core/selectors";
-import { LL } from "../../locales";
+import { LL, locale } from "../../locales";
 
 import { setupItemStatus } from "../item-status";
 import { Progress } from "../progress";
@@ -18,7 +18,6 @@ import { incrementTotalBooks, resetCheckStates, setCheckScope, useCheckStates, t
 import { type StatusType } from "./book-statuses";
 
 import classes from "./check-actions.module.scss";
-import { checkUpdate, runBatchCheck } from "../../core/checker";
 
 export interface CheckActions
 {
@@ -26,8 +25,6 @@ export interface CheckActions
     checkWholePage(): Promise<void>;
     checkWholeLibrary(): Promise<void>;
 }
-
-export type CheckResults = Map<StatusType, Book[]>;
 
 const SUMMARY_ORDER: StatusType[] = [
     "latest",
@@ -38,7 +35,7 @@ const SUMMARY_ORDER: StatusType[] = [
     "failed",
 ];
 
-const queue = new Queue({ concurrency: 5 });
+const COLLATOR = Intl.Collator(locale, { numeric: true });
 
 function LibraryCheckingProgress(): ComponentChildren
 {
@@ -124,6 +121,7 @@ export function useCheckActions(): CheckActions
         if (isChecking) { return; }
 
         const books = getBooksFromDocument();
+        books.sort((a, b) => COLLATOR.compare(a.title, b.title));
         const results = await runBatchCheck(books, "page", controller.signal);
         showResultModal(results, "page");
     }
@@ -229,7 +227,8 @@ export function useCheckActions(): CheckActions
             });
 
         if (!bypassReloading) { await loadLibraryBooks(); }
-        const results = await runBatchCheck(getFetchedBooks(), "library", controller.signal);
+        const books = getFetchedBooks().toSorted((a, b) => COLLATOR.compare(a.title, b.title));
+        const results = await runBatchCheck(books, "library", controller.signal);
         closeModal(id);
 
         setAbortController(new AbortController());

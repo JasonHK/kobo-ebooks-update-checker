@@ -3,13 +3,14 @@ import Queue from "queue";
 import { LL } from "../locales";
 
 import { getBookStatusById, setBookStatusById, type StatusType } from "../ui/hooks/book-statuses";
-import type { CheckResults } from "../ui/hooks/check-actions";
 import { type CheckScope, incrementCheckedBooks, setCheckScope, resetCheckStates } from "../ui/hooks/check-states";
 import { setupItemStatus } from "../ui/item-status";
 
 import { UnlistedError, ParsingError, NetworkError } from "./errors";
 import type { Book } from "./books";
 import { fetchProductFromUrl } from "./products";
+
+export type CheckResults = Map<StatusType, Book[]>;
 
 const CACHED_STATUSES = new Set<StatusType>(
 [
