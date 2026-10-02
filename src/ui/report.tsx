@@ -2,8 +2,9 @@ import type { ComponentChildren } from "preact";
 import { renderToString } from "preact-render-to-string";
 import { GM } from "$";
 
+import type { CheckResults } from "../core/checker";
 import { LL, locale } from "../locales";
-import type { CheckResults } from "./hooks/check-actions";
+
 import type { StatusType } from "./hooks/book-statuses";
 import { closeModal, openModal } from "./hooks/modals";
 
