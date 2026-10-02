@@ -2,10 +2,8 @@ import type { ComponentChildren } from "preact";
 import { useId } from "preact/hooks";
 import Queue from "queue";
 
-import { NetworkError, ParsingError, UnlistedError } from "../../core/errors";
 import { getBooksFromDocument, type Book } from "../../core/books";
 import { fetchPageFromUrl, getPageFromDocument } from "../../core/pages";
-import { fetchProductFromUrl } from "../../core/products";
 import { LIBRARY_PAGINATION } from "../../core/selectors";
 import { LL } from "../../locales";
 
@@ -16,10 +14,11 @@ import { exportReport } from "../report";
 import { openModal, closeModal } from "./modals";
 import { setAbortController, useAbortController } from "./abort-controller";
 import { useFetchStates, getFetchedBooks, incrementFetchedPages, pushFetchedBooks, resetFetchStates, setTotalPages } from "./fetch-states";
-import { incrementCheckedBooks, incrementTotalBooks, resetCheckStates, setCheckScope, useCheckStates, type CheckScope } from "./check-states";
-import { getBookStatusById, setBookStatusById, type StatusType } from "./book-statuses";
+import { incrementTotalBooks, resetCheckStates, setCheckScope, useCheckStates, type CheckScope } from "./check-states";
+import { type StatusType } from "./book-statuses";
 
 import classes from "./check-actions.module.scss";
+import { checkUpdate, runBatchCheck } from "../../core/checker";
 
 export interface CheckActions
 {
@@ -29,14 +28,6 @@ export interface CheckActions
 }
 
 export type CheckResults = Map<StatusType, Book[]>;
-
-const CACHED_STATUSES = new Set<StatusType>(
-[
-    "latest",
-    "outdated",
-    "preview",
-    "preOrder",
-]);
 
 const SUMMARY_ORDER: StatusType[] = [
     "latest",
@@ -79,115 +70,6 @@ export function useCheckActions(): CheckActions
     const { isFetched } = useFetchStates();
     const { isChecking } = useCheckStates();
     const controller = useAbortController();
-
-    async function checkUpdate(book: Book, scope: CheckScope): Promise<void>
-    {
-        const status = getBookStatusById(book.id);
-        if (CACHED_STATUSES.has(status.type))
-        {
-            incrementCheckedBooks();
-            return;
-        }
-
-        if (book.isPreOrder || book.isPreview)
-        {
-            setBookStatusById(book.id, { type: book.isPreOrder ? "preOrder" : "preview" });
-            incrementCheckedBooks();
-            return;
-        }
-
-        setBookStatusById(book.id, { type: "checking" });
-
-        try
-        {
-            const product = await fetchProductFromUrl(book.storeUrl, controller.signal);
-            if (product.productId === book.productId)
-            {
-                setBookStatusById(book.id, { type: "latest" });
-            }
-            else
-            {
-                setBookStatusById(book.id, { type: "outdated" });
-            }
-        }
-        catch (error: unknown)
-        {
-            if (error instanceof UnlistedError)
-            {
-                setBookStatusById(
-                    book.id,
-                    {
-                        type: "failed",
-                        message: LL.error.unlisted(),
-                    });
-            }
-            else if (error instanceof ParsingError)
-            {
-                setBookStatusById(
-                    book.id,
-                    {
-                        type: "failed",
-                        message: LL.error.parsing(),
-                        error: String(error.cause),
-                    });
-            }
-            else if (error instanceof NetworkError)
-            {
-                setBookStatusById(
-                    book.id,
-                    {
-                        type: "failed",
-                        message: LL.error.unknown(),
-                        error: String(error.message),
-                    });
-            }
-            else if ((error instanceof DOMException) && (error.name === "AbortError"))
-            {
-                setBookStatusById(book.id, { type: "skipped" });
-            }
-        }
-        finally
-        {
-            incrementCheckedBooks();
-        }
-    }
-
-    function runBatchCheck(books: Book[], scope: Exclude<CheckScope, "single">): Promise<CheckResults>
-    {
-        if (books.length === 0) { return Promise.resolve(new Map()); }
-
-        setCheckScope(scope, books.length);
-        if (scope === "page") { books.forEach(setupItemStatus); }
-
-        for (const book of books)
-        {
-            queue.push(async () => checkUpdate(book, scope));
-        }
-
-        const promise = new Promise<CheckResults>((resolve) =>
-        {
-            queue.addEventListener("end", () =>
-                {
-                    const booksByStatus = books.reduce((groups, book) =>
-                    {
-                        const status = getBookStatusById(book.id).type;
-                        const statusBooks = groups.get(status) ?? [];
-
-                        statusBooks.push(book);
-                        groups.set(status, statusBooks);
-
-                        return groups;
-                    }, new Map<StatusType, Book[]>());
-
-                    resolve(booksByStatus);
-                    resetCheckStates();
-                },
-                { once: true });
-        });
-
-        queue.start();
-        return promise;
-    }
 
     function showResultModal(results: CheckResults, scope: Exclude<CheckScope, "single">): void
     {
@@ -232,7 +114,7 @@ export function useCheckActions(): CheckActions
         setCheckScope("single", 1);
 
         setupItemStatus(book);
-        await checkUpdate(book, "single");
+        await checkUpdate(book, controller.signal);
 
         resetCheckStates();
     }
@@ -242,7 +124,7 @@ export function useCheckActions(): CheckActions
         if (isChecking) { return; }
 
         const books = getBooksFromDocument();
-        const results = await runBatchCheck(books, "page");
+        const results = await runBatchCheck(books, "page", controller.signal);
         showResultModal(results, "page");
     }
 
@@ -347,7 +229,7 @@ export function useCheckActions(): CheckActions
             });
 
         if (!bypassReloading) { await loadLibraryBooks(); }
-        const results = await runBatchCheck(getFetchedBooks(), "library");
+        const results = await runBatchCheck(getFetchedBooks(), "library", controller.signal);
         closeModal(id);
 
         setAbortController(new AbortController());
