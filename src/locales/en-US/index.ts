@@ -1,6 +1,6 @@
 import type { GmDownloadErrorEvent } from "$";
 import type { StatusType } from "../../ui/hooks/book-statuses";
-import { type BaseTranslation } from "../i18n-types";
+import type { BaseTranslation } from "../i18n-types";
 
 const en_US: BaseTranslation = {
     secondaryControls: {

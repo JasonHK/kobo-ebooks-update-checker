@@ -1,4 +1,4 @@
-import { type Translation } from "../i18n-types";
+import type { Translation } from "../i18n-types";
 
 const zh_TW: Translation = {
     secondaryControls: {
