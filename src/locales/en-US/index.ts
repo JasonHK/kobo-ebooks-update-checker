@@ -1,3 +1,4 @@
+import type { GmDownloadErrorEvent } from "$";
 import type { StatusType } from "../../ui/hooks/book-statuses";
 import type { BaseTranslation } from "../i18n-types";
 
@@ -17,6 +18,7 @@ const en_US: BaseTranslation = {
         latest: "Latest",
         outdated: "Outdated",
         preview: "Preview",
+        preOrder: "Pre-order",
         skipped: "Skipped",
         failed: "Failed",
     } satisfies Record<StatusType, string>,
@@ -24,6 +26,7 @@ const en_US: BaseTranslation = {
         titles: {
             message: "Message",
             warning: "Warning",
+            error: "Error",
             checkingInProgress: "Checking in Progress",
             checkCompleted: "Check Completed",
         },
@@ -38,15 +41,18 @@ const en_US: BaseTranslation = {
             finishCheckingLibrary: "Finished checking the library. Checked {0:number} title{{s}} in total.",
             statusSummaries: {
                 // Unused, kept for typing purposes.
-                pending: "Pending: {0: number} Title{{s}}",
-                checking: "Checking: {0: number} Title{{s}}",
+                pending: "Pending: {0:number} Title{{s}}",
+                checking: "Checking: {0:number} Title{{s}}",
                 
-                latest: "Latest: {0: number} Title{{s}}",
-                outdated: "Outdated: {0: number} Title{{s}}",
-                preview: "Preview: {0: number} Title{{s}}",
-                skipped: "Skipped: {0: number} Title{{s}}",
-                failed: "Failed: {0: number} Title{{s}}",
+                latest: "Latest: {0:number} Title{{s}}",
+                outdated: "Outdated: {0:number} Title{{s}}",
+                preview: "Preview: {0:number} Title{{s}}",
+                preOrder: "Pre-order: {0:number} Title{{s}}",
+                skipped: "Skipped: {0:number} Title{{s}}",
+                failed: "Failed: {0:number} Title{{s}}",
             } satisfies Record<StatusType, string>,
+            downloadErrorDetails: " Error details: {0:string}",
+            reportOpenedInTab: "Report was opened in a new tab instead.",
         },
         actions: {
             startChecking: "Start Checking",
@@ -68,6 +74,7 @@ const en_US: BaseTranslation = {
             latest: "Latest ({0:number} Title{{s}})",
             outdated: "Outdated ({0:number} Title{{s}})",
             preview: "Preview ({0:number} Title{{s}})",
+            preOrder: "Pre-order ({0:number} Title{{s}})",
             skipped: "Skipped ({0:number} Title{{s}})",
             failed: "Failed ({0:number} Title{{s}})",
         } satisfies Record<StatusType, string>,
@@ -76,6 +83,13 @@ const en_US: BaseTranslation = {
         unlisted: "This book was unlisted, there’s no way to check update for this type of books at the moment.",
         parsing: "Failed to parse the latest product ID, please contact the developer for further investigations.",
         unknown: "Unknown error, please contact the developer for further investigations.",
+        download: {
+            not_enabled: "Download feature not enabled. Please enable it in the UserScript manager’s settings.",
+            not_whitelisted: "File extension not whitelisted. Please add the .html extension to the UserScript manager’s whitelist.",
+            not_permitted: "Downloads permission not granted. Please grant the permission to the UserScript manager.",
+            not_supported: "Download feature not supported by the browser or UserScript manager.",
+            not_succeeded: "Failed to download the file.",
+        } satisfies Record<GmDownloadErrorEvent["error"], string>,
     },
 };
 
