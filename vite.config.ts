@@ -44,6 +44,8 @@ export default defineConfig(
                         "grant": [
                             "GM.setClipboard",
                         ],
+                        "updateURL": "https://github.com/JasonHK/kobo-ebooks-update-checker/releases/latest/download/kobo-ebooks-update-checker.meta.js",
+                        "downloadURL": "https://github.com/JasonHK/kobo-ebooks-update-checker/releases/latest/download/kobo-ebooks-update-checker.user.js",
                     },
                     build: {
                         metaFileName: true,
