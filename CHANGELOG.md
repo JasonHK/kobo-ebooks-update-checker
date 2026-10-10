@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.1.0](https://github.com/JasonHK/kobo-ebooks-update-checker/compare/v2.0.2...v2.1.0) (2026-10-10)
+
+
+### Features
+
+* sort the books by the titles ([#15](https://github.com/JasonHK/kobo-ebooks-update-checker/issues/15)) ([40957a0](https://github.com/JasonHK/kobo-ebooks-update-checker/commit/40957a0091a9adff3c86b5441a724afc9cb4cd03))
+
+
+### Bug Fixes
+
+* missing self-update URLs ([#18](https://github.com/JasonHK/kobo-ebooks-update-checker/issues/18)) ([08c5959](https://github.com/JasonHK/kobo-ebooks-update-checker/commit/08c59591c93908f2fe1356602f2499f99355c397))
+
 ## [2.0.2](https://github.com/JasonHK/kobo-ebooks-update-checker/compare/v2.0.1...v2.0.2) (2026-10-01)
 
 

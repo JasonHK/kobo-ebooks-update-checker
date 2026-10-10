@@ -1,6 +1,6 @@
 {
   "name": "kobo-ebooks-update-checker",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "Checks if updates were available for the e-books you own.",
   "homepage": "https://github.com/JasonHK/kobo-ebooks-update-checker#readme",
   "bugs": {
