@@ -27,10 +27,10 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Check out release tag
+      - name: Check out master
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: ${{ needs.release_please.outputs.tag_name }}
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024
