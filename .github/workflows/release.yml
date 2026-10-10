@@ -16,7 +16,6 @@ jobs:
     outputs:
       releases_created: ${{ steps.release_please.outputs.releases_created }}
       tag_name: ${{ steps.release_please.outputs.tag_name }}
-      body: ${{ steps.release_please.outputs.body }}
     steps:
       - id: release_please
         uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7
@@ -52,7 +51,6 @@ jobs:
         with:
           tag_name: ${{ needs.release_please.outputs.tag_name }}
           draft: true
-          body: ${{ needs.release_please.outputs.body }}
           files: |
             ./dist/*.meta.js
             ./dist/*.user.js
