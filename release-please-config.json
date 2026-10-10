@@ -3,6 +3,7 @@
     "release-type": "node",
     "draft-pull-request": true,
     "include-component-in-tag": false,
+    "draft": true,
     "packages": {
         ".": {}
     }

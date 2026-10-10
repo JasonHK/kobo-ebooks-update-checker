@@ -46,45 +46,17 @@ jobs:
       - name: Build UserScript
         run: pnpm run build
 
-      - name: Upload to GitHub Releases
+      - name: Draft new GitHub release
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64
         with:
           tag_name: ${{ needs.release_please.outputs.tag_name }}
-          fail_on_unmatched_files: true
+          draft: true
           files: |
             ./dist/*.meta.js
             ./dist/*.user.js
+          fail_on_unmatched_files: true
 
-      - name: Deliver webhook to Greasy Fork
+      - name: Publish GitHub release
         env:
-          WEBHOOK_URL: ${{ secrets.GREASYFORK_WEBHOOK_URL }}
-          WEBHOOK_SECRET: ${{ secrets.GREASYFORK_WEBHOOK_SECERT }}
-          RELEASE_TAG: ${{ needs.release_please.outputs.tag_name }}
-          REPOSITORY_URL: ${{ github.event.repository.html_url }}
-          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
-          CLONE_URL: ${{ github.event.repository.clone_url }}
-        run: |
-          set -euo pipefail
-
-          payload=$(jq -n \
-            --arg tag_name "$RELEASE_TAG" \
-            --arg html_url "$REPOSITORY_URL" \
-            --arg default_branch "$DEFAULT_BRANCH" \
-            --arg clone_url "$CLONE_URL" \
-            '{
-              action: "published",
-              release: {name: $tag_name, tag_name: $tag_name},
-              repository: {
-                html_url: $html_url,
-                default_branch: $default_branch,
-                clone_url: $clone_url
-              }
-            }')
-          signature=$(printf '%s' "$payload" | openssl dgst -sha1 -hmac "$WEBHOOK_SECRET" | awk '{print $NF}')
-
-          curl --silent --show-error --fail-with-body \
-            --header 'Content-Type: application/json' \
-            --header "X-Hub-Signature: sha1=$signature" \
-            --header 'X-GitHub-Event: release' \
-            --data-binary "$payload" \
-            "$WEBHOOK_URL"
+          GH_TOKEN: ${{ github.token }}
+        run: gh release edit "${{ needs.release_please.outputs.tag_name }}" --draft=false
