@@ -27,8 +27,8 @@ export default defineConfig(
                             "zh-TW": "Kobo 電子書更新檢查器",
                         },
                         "description": {
-                            "": "Checks if updates were available for the e-books you own.",
-                            "zh-TW": "檢查你購買的電子書是否有更新檔提供。",
+                            "": "Checks whether updates are available for your Kobo e-books.",
+                            "zh-TW": "檢查你擁有的 Kobo 電子書是否有可用更新。",
                         },
                         "icon": "https://icons.duckduckgo.com/ip3/www.kobo.com.ico",
                         "namespace": "https://jasonhk.dev/",
@@ -41,9 +41,6 @@ export default defineConfig(
                             "https://www.kobo.com/*/*/library/archive?*",
                         ],
                         "run-at": "document-end",
-                        "grant": [
-                            "GM.setClipboard",
-                        ],
                         "updateURL": "https://github.com/JasonHK/kobo-ebooks-update-checker/releases/latest/download/kobo-ebooks-update-checker.meta.js",
                         "downloadURL": "https://github.com/JasonHK/kobo-ebooks-update-checker/releases/latest/download/kobo-ebooks-update-checker.user.js",
                     },
