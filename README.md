@@ -126,7 +126,7 @@ At the results summary dialog, you can either:
 
 Userscripts run in your browser and can use the permissions granted by your userscript manager. Install this script only from the official repository or a release you have reviewed; avoid modified copies from untrusted sources.
 
-Saving a report uses `GM.download`. If the download fails, `GM.openInTab` opens the report in a new tab. This flow starts only when you click “Save Report”. The script also loads dependencies from `unpkg.com`.
+Saving a report uses `GM.download`. If the download fails, `GM.openInTab` opens the report in a new tab. This flow starts only when you click the “Save Report” button. The script also loads dependencies from `unpkg.com`.
 
 The script fetches library pages from Kobo using your existing session and product pages without session credentials. Reports are generated locally and are not sent to this project.
 
