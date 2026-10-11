@@ -48,7 +48,7 @@ jobs:
       - name: Install dependencies
         run: pnpm ci
 
-      - name: Build UserScript
+      - name: Build userscript
         run: pnpm run build
 
       - name: Upload to GitHub release
@@ -57,14 +57,36 @@ jobs:
           tag_name: ${{ needs.prepare_release.outputs.tag_name }}
           draft: true
           files: |
-            ./dist/*.meta.js
-            ./dist/*.user.js
+            dist/*.meta.js
+            dist/*.user.js
           fail_on_unmatched_files: true
 
       - name: Publish GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release edit "${{ needs.prepare_release.outputs.tag_name }}" --draft=false
+
+      - name: Update release branch
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin refs/heads/release:refs/remotes/origin/release
+          git switch --force-create release --track origin/release
+
+          rm --force *.meta.js *.user.js
+          cp dist/*.meta.js dist/*.user.js .
+
+          git add -- *.meta.js *.user.js
+
+          if ! git diff --cached --quiet; then
+            git commit --message="chore(release): release ${{ needs.prepare_release.outputs.tag_name }}"
+            git push origin release
+          else
+            echo "No release to commit"
+          fi
 
   draft_next_release:
     name: Draft next release
