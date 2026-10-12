@@ -4,6 +4,10 @@
 [![GitHub License](https://img.shields.io/github/license/JasonHK/kobo-ebooks-update-checker?style=flat-square)](LICENSE)
 [![Greasy Fork Downloads](https://img.shields.io/greasyfork/dt/482410?style=flat-square)][greasyfork-stats]
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/JasonHK/kobo-ebooks-update-checker/nightly.yml?branch=master&style=flat-square)][workflow-nightly]
+![Vite](https://img.shields.io/badge/vite-9135ff?style=flat-square&logo=vite&logoColor=white)
+![TypeScript](https://img.shields.io/badge/typescript-%233178c6?style=flat-square&logo=typescript&logoColor=white)
+![Preact](https://img.shields.io/badge/preact-673ab8?style=flat-square&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9IiNmZmYiIHZpZXdCb3g9IjAgMCAyNCAyNCI%2BPHBhdGggZD0iTTEyIDEwLjRhMS42IDEuNiAwIDAgMC0xLjYgMS42IDEuNiAxLjYgMCAwIDAgMS42IDEuNiAxLjYgMS42IDAgMCAwIDEuNi0xLjYgMS42IDEuNiAwIDAgMC0xLjYtMS42bTUuNS00LjNoLjZsLjUuMi4zLjIuMi40djFsLS4yLjgtLjUgMS0uOCAxLjItLjUuNS0uNy0uNy0yLTEuOC0uMi4zLjItLjMtLjUuNiAyIDEuOC43LjctLjMuMy0uMy4zLjYuNi4zLS40LjItLjIuMi4yIDEgMS4zLjUgMSAuMy44VjE3bC0uMS40LS4zLjItLjQuMi0uNi4xaC0uOHEtLjYgMC0xLS4zbC0xLjUtLjUtMS43LS44IDEuNy0xLjItLjItLjMuMi4zLS41LS42LTIuMSAxLjUtMS45IDEtMS40LjUtMS4xLjMtLjkuMWgtLjZsLS41LS4yLS4zLS4yLS4yLS40di0xbC4yLS44LjUtMUw3IDEyLjZsLjcuNyAyIDEuOC41LS42LTItMS43LS43LS44LjMtLjMuMy0uMy0uNS0uNi0uNC40LS4yLjItLjItLjJMNS4yIDkgNSA4LjFWN2wuMS0uNC4zLS4yLjQtLjIuNi0uMWguOGwxIC4zIDEuNS41IDEuNy44TDkuNiA5bC41LjZhMjMgMjMgMCAwIDEgNS40LTNsMS4xLS4zem0wLS44LTEgLjEtMS4zLjQtMS41LjYtMS43LjlhMTUgMTUgMCAwIDAtMy42LTEuN2wtMi4xLS4zLS44LjEtLjYuM2EyIDIgMCAwIDAtLjggMXYuOGwuMS44LjMgMSAuNyAxIDEgMS40LjIuM0w1IDE0bC0uNiAxLS4zIDF2LjdsLjEuN2EyIDIgMCAwIDAgLjggMWwuNy4yaDEuOGwxLjItLjNhMTQgMTQgMCAwIDAgMy4zLTEuNmwuNC4yIDEuNyAxIDEuNS41IDEuMi4yaDEuN2wuNi0uM2EyIDIgMCAwIDAgLjgtMXYtLjhsLS4xLS44LS4zLTFhMTAgMTAgMCAwIDAtMS42LTIuNGwtLjMtLjMgMS40LTIgLjYtMSAuMy0xdi0uN2wtLjEtLjdhMiAyIDAgMCAwLS44LTFsLS43LS4yek0xMiAwbDEwLjQgNnYxMkwxMiAyNCAxLjYgMThWNloiLz48L3N2Zz4%3D)
+
 
 A userscript that checks whether updates are available for your Kobo e-books.
 
@@ -72,7 +76,7 @@ The status indicator is a live-updating text which reflect the current status of
 
 ![Message shown on failed status](images/en/failed-message.png)
 
-#### Appendix: All Possible Statusesfloat
+#### Appendix: All Possible Statuses
 
 <table>
     <tr>
