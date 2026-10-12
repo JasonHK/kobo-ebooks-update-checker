@@ -1,11 +1,11 @@
 # Kobo e-Books Update Checker
 
-A userscript that checks whether updates are available for your Kobo e-books.
-
 [![Greasy Fork Version](https://img.shields.io/greasyfork/v/482410?style=flat-square)][greasyfork]
-[![GitHub License](https://img.shields.io/github/license/JasonHK/kobo-ebooks-update-checker?style=flat-square)][license]
+[![GitHub License](https://img.shields.io/github/license/JasonHK/kobo-ebooks-update-checker?style=flat-square)](LICENSE)
 [![Greasy Fork Downloads](https://img.shields.io/greasyfork/dt/482410?style=flat-square)][greasyfork-stats]
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/JasonHK/kobo-ebooks-update-checker/nightly.yml?branch=master&style=flat-square)][workflow-nightly]
+
+A userscript that checks whether updates are available for your Kobo e-books.
 
 
 ## Installation
@@ -20,6 +20,10 @@ A userscript that checks whether updates are available for your Kobo e-books.
 To check update for the e-books in your Kobo library, first navigate to your library. You can choose to either check for [a single book](#check-for-a-single-book), [the current page](#check-for-the-current-page), or [the whole library](#check-for-the-whole-library).
 
 Check result for a book will be cached if the final status for it is either “Latest”, “Outdated”, “Preview” or “Pre-order”. In those cases the book won’t be checked again to save on data usage.
+
+> [!NOTE]
+>
+> The cache is persisted until page reloaded or navigated away from library.
 
 
 ### Check for a Single Book
@@ -47,6 +51,10 @@ Check result for a book will be cached if the final status for it is either “L
 1. A progress dialog will then shows up for you to monitor the checking progress. You can cancel checking at any time.
 1. Review the [results summary dialog](#results-summary-for-current-page-or-whole-library) when the checks finished.
 
+> [!NOTE]
+>
+> The cache is persisted until page reloaded or navigated away from library.
+
 ![Check update for the whole library](images/en/check-whole-library.png)
 
 ![Confirm to check the whole library](images/en/confirm-check-whole-library.png)
@@ -64,7 +72,7 @@ The status indicator is a live-updating text which reflect the current status of
 
 ![Message shown on failed status](images/en/failed-message.png)
 
-#### Appendix: All Possible Statuses
+#### Appendix: All Possible Statusesfloat
 
 <table>
     <tr>
@@ -120,6 +128,27 @@ At the results summary dialog, you can either:
 
 ### Report (for Current Page or Whole Library)
 
+The report is a HTML-based document, listing all of the checked books ordered in a locale-aware manner, grouped by the books’ status. You can contact the customer support to request for updating the outdated books based on the report.
+
+![Report](images/en/report.png)
+
+
+## Bug Reports
+
+Found a problem? Check [existing issues](https://github.com/JasonHK/kobo-ebooks-update-checker/issues) first, then [open a bug report](https://github.com/JasonHK/kobo-ebooks-update-checker/issues/new) with steps to reproduce, the expected and actual behavior, and your browser and userscript-manager details. Do not include account credentials or other sensitive information. For security vulnerabilities, follow the process in [SECURITY.md](SECURITY.md) instead.
+
+
+## Development
+
+Development requires Node.js 24.x and pnpm 12.x.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm run dev
+pnpm run build
+```
+
+The build regenerates the localization helpers, checks TypeScript, and bundles the userscript. To translate the UI, edit the locale source dictionaries under [`src/locales`](src/locales), then run `pnpm run locales --no-watch`. Do not edit generated localization files directly. See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, translation, and contribution details.
 
 
 ## Security Considerations
@@ -130,16 +159,14 @@ Saving a report uses `GM.download`. If the download fails, `GM.openInTab` opens 
 
 The script fetches library pages from Kobo using your existing session and product pages without session credentials. Reports are generated locally and are not sent to this project.
 
-See [SECURITY.md][security] for the security policy and vulnerability-reporting process.
+See [SECURITY.md](SECURITY.md) for the security policy and vulnerability-reporting process.
 
 
-## Development
+## License
+
+This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for the full license text.
 
 
-
-
-[license]: https://github.com/JasonHK/kobo-ebooks-update-checker/blob/master/LICENSE
-[security]: https://github.com/JasonHK/kobo-ebooks-update-checker/blob/master/SECURITY.md
 [releases]: https://github.com/JasonHK/kobo-ebooks-update-checker/releases/latest
 [workflow-nightly]: https://github.com/JasonHK/kobo-ebooks-update-checker/actions/workflows/nightly.yml
 [greasyfork]: https://greasyfork.org/scripts/482410
