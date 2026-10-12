@@ -1,7 +1,7 @@
 {
   "name": "kobo-ebooks-update-checker",
   "version": "2.1.0",
-  "description": "Checks if updates were available for the e-books you own.",
+  "description": "A userscript that checks whether updates are available for your Kobo e-books.",
   "homepage": "https://github.com/JasonHK/kobo-ebooks-update-checker#readme",
   "bugs": {
     "url": "https://github.com/JasonHK/kobo-ebooks-update-checker/issues"
