@@ -1,5 +1,7 @@
 # Kobo e-Books Update Checker
 
+**Other Languages:** [正體中文](README.zh-TW.md)
+
 [![Greasy Fork Version](https://img.shields.io/greasyfork/v/482410?style=flat-square)][greasyfork]
 [![GitHub License](https://img.shields.io/github/license/JasonHK/kobo-ebooks-update-checker?style=flat-square)](LICENSE)
 [![Greasy Fork Downloads](https://img.shields.io/greasyfork/dt/482410?style=flat-square)][greasyfork-stats]
@@ -152,14 +154,14 @@ pnpm run dev
 pnpm run build
 ```
 
-The build regenerates the localization helpers, checks TypeScript, and bundles the userscript. To translate the UI, edit the locale source dictionaries under [`src/locales`](src/locales), then run `pnpm run locales --no-watch`. Do not edit generated localization files directly. See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, translation, and contribution details.
+The build regenerates the localization helpers, checks TypeScript, and bundles the userscript. To translate the UI, edit the locale source dictionaries under [src/locales](src/locales), then run `pnpm run locales --no-watch`. Do not edit generated localization files directly. See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, translation, and contribution details.
 
 
 ## Security Considerations
 
 Userscripts run in your browser and can use the permissions granted by your userscript manager. Install this script only from the official repository or a release you have reviewed; avoid modified copies from untrusted sources.
 
-Saving a report uses `GM.download`. If the download fails, `GM.openInTab` opens the report in a new tab. This flow starts only when you click the <kbd><samp>Save Report</samp></kbd> button. The script also loads dependencies from `unpkg.com`.
+Saving a report uses `GM.download`. If the download fails, `GM.openInTab` opens the report in a new tab. This flow starts only when you click the <kbd><samp>Save Report</samp></kbd> button. The script also loads dependencies from [unpkg.com](https://unpkg.com/).
 
 The script fetches library pages from Kobo using your existing session and product pages without session credentials. Reports are generated locally and are not sent to this project.
 
