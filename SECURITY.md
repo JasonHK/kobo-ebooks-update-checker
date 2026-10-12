@@ -18,7 +18,7 @@ Reports will be acknowledged and investigated on a best-effort basis. There is n
 
 The userscript runs on Kobo library and archive pages. It fetches library pages from Kobo using the browser’s same-origin session and fetches Kobo product pages without session credentials. It parses those pages to check book product information.
 
-Reports are generated locally in the browser. Saving a report uses `GM.download`; if that fails, the report is opened in a new tab with `GM.openInTab`. This happens after the user clicks the “Save Report” button. The script does not send library data or report contents to this project’s servers.
+Reports are generated locally in the browser. Saving a report uses `GM.download`; if that fails, the report is opened in a new tab with `GM.openInTab`. This happens after the user clicks the <kbd><samp>Save Report</samp></kbd> button. The script does not send library data or report contents to this project’s servers.
 
 The userscript loads runtime dependencies from `unpkg.com`, a third-party service. Security concerns involving those dependencies or other third-party services should also be reported to their respective maintainers.
 

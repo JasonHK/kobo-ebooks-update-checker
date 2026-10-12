@@ -28,8 +28,8 @@ Check result for a book will be cached if the final status for it is either “L
 
 ### Check for a Single Book
 
-1. Click the actions button on the library item.
-1. In the menu, click the “Check Update” action.
+1. Click the <kbd><samp>⋯</samp></kbd> actions button on the library item.
+1. In the menu, click the <kbd><samp>Check Update</samp></kbd> action.
 1. Review the live-updating [indicator for the book status](#status-indicators-for-single-book-or-current-page).
 
 ![Check update for a single book](images/en/check-single-book.png)
@@ -37,7 +37,7 @@ Check result for a book will be cached if the final status for it is either “L
 
 ### Check for the Current Page
 
-1. Click the “Check Update for Page” button at the top of the page.
+1. Click the <kbd><samp>Check Update for Page</samp></kbd> button at the top of the page.
 1. Review the live-updating [indicators for the book statuses](#status-indicators-for-single-book-or-current-page) and the [results summary dialog](#results-summary-for-current-page-or-whole-library) when the checks finished.
 
 ![Check update for the current page](images/en/check-current-page.png)
@@ -45,9 +45,9 @@ Check result for a book will be cached if the final status for it is either “L
 
 ### Check for the Whole Library
 
-1. Click the “Check Update for Library” button at the top of the page.
-1. Confirm you want to check the whole library by clicking the “Start Checking” button.
-1. When you previously checked the library, you’ll be asked if you want to reload the cached library. Click the “Reload Library” button when the filter criteria (e.g. search keyword, genre, item type) changed. Otherwise you can click the “Bypass Reloading” button to save time on reloading the library.
+1. Click the <kbd><samp>Check Update for Library</samp></kbd> button at the top of the page.
+1. Confirm you want to check the whole library by clicking the <kbd><samp>Start Checking</samp></kbd> button.
+1. When you previously checked the library, you’ll be asked if you want to reload the cached library. Click the <kbd><samp>Reload Library</samp></kbd> button when the filter criteria (e.g. search keyword, genre, item type) changed. Otherwise you can click the <kbd><samp>Bypass Reloading</samp></kbd> button to save time on reloading the library.
 1. A progress dialog will then shows up for you to monitor the checking progress. You can cancel checking at any time.
 1. Review the [results summary dialog](#results-summary-for-current-page-or-whole-library) when the checks finished.
 
@@ -155,7 +155,7 @@ The build regenerates the localization helpers, checks TypeScript, and bundles t
 
 Userscripts run in your browser and can use the permissions granted by your userscript manager. Install this script only from the official repository or a release you have reviewed; avoid modified copies from untrusted sources.
 
-Saving a report uses `GM.download`. If the download fails, `GM.openInTab` opens the report in a new tab. This flow starts only when you click the “Save Report” button. The script also loads dependencies from `unpkg.com`.
+Saving a report uses `GM.download`. If the download fails, `GM.openInTab` opens the report in a new tab. This flow starts only when you click the <kbd><samp>Save Report</samp></kbd> button. The script also loads dependencies from `unpkg.com`.
 
 The script fetches library pages from Kobo using your existing session and product pages without session credentials. Reports are generated locally and are not sent to this project.
 
