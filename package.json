@@ -1,7 +1,7 @@
 {
   "name": "kobo-ebooks-update-checker",
   "version": "2.1.0",
-  "description": "Checks if updates were available for the e-books you own.",
+  "description": "A userscript that checks whether updates are available for your Kobo e-books.",
   "homepage": "https://github.com/JasonHK/kobo-ebooks-update-checker#readme",
   "bugs": {
     "url": "https://github.com/JasonHK/kobo-ebooks-update-checker/issues"
@@ -34,7 +34,12 @@
     "@preact/preset-vite": "^2.10.5",
     "@tsconfig/recommended": "^1.0.13",
     "@types/node": "^25.6.0",
+    "glob": "^13.0.6",
     "jsdom": "^30.0.1",
+    "marked": "^18.1.1",
+    "marked-alert": "^2.1.2",
+    "marked-base-url": "^1.1.10",
+    "marked-sequential-hooks": "^1.2.2",
     "sass-embedded": "^1.99.0",
     "typescript": "^6.0.3",
     "vite": "^8.2.2",

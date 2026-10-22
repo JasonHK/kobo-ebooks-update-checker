@@ -1,0 +1,11 @@
+{
+    "extends": ["@tsconfig/recommended"],
+    "compilerOptions": {
+        "target": "es2024",
+        "module": "esnext",
+        "types": ["node"]
+    },
+    "include": [
+        "."
+    ],
+}
